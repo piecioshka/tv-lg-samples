@@ -1,0 +1,113 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>LG Smart TV SDK | Web Open API Tutorial</title>
+<link rel="stylesheet" href="./css/style.css">
+<script language="javascript" src="./js/keycode.js"></script>
+<script language="javascript" src="./js/common.js"></script>
+<script language="javascript" src="./js/menu.js"></script>
+<script>
+
+	//set onload event handler
+	addEventHandler(window, "load", initPage);
+	
+	//initialize page
+	function initPage()
+	{
+		commonInitialize();
+
+		//add onclick event handler
+		addEventHandler(document.getElementById("btn_back"), "click", onClickHandler);
+		addEventHandler(document.getElementById("btn_exit"), "click", onClickHandler);
+		
+		//set pageID. pageID is used to save lastest executed menu as a cookie
+		setPageID("main_menu");
+		
+		addMenu("NetCast", "./netcast/menu_netcast.html");
+		addMenu("Media Player", "./mediaplayer/menu_mediaPlayer.html");
+		addMenu("Device Info", "./deviceinfo/deviceinfo01.html");
+		addMenu("Broadcast", "./broadcast/broadcast.html");
+//		addMenu("Image", "./imageapi/image.html");
+		addMenu("Voice Recognition", "./voice/voice_recognition.html");
+		addMenu("Common Javascript API", "./commonjavascriptapi/menu_commonjavascriptapi.html");
+		addMenu("Advertisement", "./advertisement/menu_advertisement.html");
+		
+		
+		drawMenu();
+		
+		//check if test is to be continued at cookie test page
+		if(readCookie("cookie_test_status") == "cookies_set")
+		{
+			showConfirmDiv("It is supposed to continue cookie test.<br>Would you like to continue ?", moveToCookieTestPage, deleteCookieTestHistory);
+		}
+		//check if test is to be continued at NetCastBack / Exit test page
+		else if(readCookie("back_exit_test_status") == "under_testing")
+		{
+			showConfirmDiv("It is supposed to continue<br>NetCastBack / Exit test.<br>Would you like to continue ?", moveToNetCastBackExitTestPage, deleteBackExitTestHistory);
+		}
+	}
+	
+	//move to cookie test page
+	function moveToCookieTestPage()
+	{
+		window.location.replace("./basicfeature/cookie/cookie_test_page01.html");
+	}
+	
+	//delete Cookie test page history from cookie
+	function deleteCookieTestHistory()
+	{
+		deleteCookie("cookie_test_status", "/");
+	}
+	
+	//move to NetCastBack / Exit	test page
+	function moveToNetCastBackExitTestPage()
+	{
+		window.location.replace("./netcast/app/backexit.html");
+	}
+
+	//delete NetCastBack / Exit test page history from cookie
+	function deleteBackExitTestHistory()
+	{
+		deleteCookie("back_exit_test_status", "/");
+	}
+	
+	//onUserInput function should be implemented
+	function onUserInput(userInput)
+	{
+		switch(userInput)
+		{
+			case VK_BACK: backToNetCastPortal(); break;
+		}
+	}
+	
+</script>
+</head>
+
+<body ondragstart='return false' onselectstart='return false'>
+	
+<!-- title -->
+<div class='SuiteTitle' >LG Smart TV SDK | Web Open API Tutorial</div>
+
+<!-- navigation -->
+<div class='SuiteNavigation'>
+	<div style="float:left;">File : /main_menu.html</div>
+</div>
+
+<div class='SuiteTitleLine'> </div>
+
+<!-- button and copyright -->	
+<div class='SuiteButtonArea'>
+	
+	<!-- button -->	
+	<div id='btn_back' class='buttonDescription '>BACK</div>
+	
+	<!-- exit key description -->	
+	<div id='btn_exit' class='buttonDescription'>EXIT</div>
+
+	<!-- copyright -->
+	<div class='copyright'>Copyright LG Electronics</div>
+</div>
+
+</body>
+</html>

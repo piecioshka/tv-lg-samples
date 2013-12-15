@@ -1,0 +1,248 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>3D Video Test Page 3/3</title>
+<link rel="stylesheet" href="../../css/style.css">
+<script language="javascript" src="../../js/common.js"></script>
+<script language="javascript" src="../../js/keycode.js"></script>
+<script language="javascript" src="../../js/media.js"></script>
+<script language="javascript" src="../../js/menu.js"></script>
+
+<script type="text/javascript" src="../../blackbirdjs/blackbird.js"></script>
+<link type="text/css" rel="Stylesheet" href="../../blackbirdjs/blackbird.css" />
+
+<script>
+
+	//initialize page
+	function initPage()
+	{
+		//save page as last visited page
+		setLastVisitPage();
+
+		//common initialize function
+		commonInitialize();
+		requestSourceCode();
+		setPageID("3D Video3");	
+		jsLog.initLG(); 
+		
+		//add onclick event handler
+		addEventHandler(document.getElementById("btn_back"), "click", onClickHandler);
+		addEventHandler(document.getElementById("btn_red"), "click", onClickHandler);
+		addEventHandler(document.getElementById("btn_green"), "click", onClickHandler);
+		addEventHandler(document.getElementById("btn_yellow"), "click", onClickHandler);
+		addEventHandler(document.getElementById("btn_blue"), "click", onClickHandler);
+		addEventHandler(document.getElementById("btn_exit"), "click", onClickHandler);
+
+		document.getElementById("btn_blue").style.display="none";
+		
+		var userAgent = new String(navigator.userAgent);
+			
+		if (userAgent != null && userAgent.search(/LG Browser/) > -1) 
+			isLGEBrowser = true;
+		else
+			isLGEBrowser = false;		
+	}
+	
+	function onUserInput(userInput)
+	{
+		switch(userInput)
+		{
+			case VK_BACK : window.location.replace("../menu_mediaPlayer.html"); break;
+			case VK_RED : case 82 : changeTestProgress(); break;
+			case VK_GREEN : case 71 : window.location.replace("./3dvideo_test_page02.html"); break;
+			case VK_YELLOW : case 89 : window.location.replace("./3dvideo_test_page04.html"); break;
+			case VK_BLUE : case 66 : displayTridMode(); break;
+		}
+	}
+	
+	function setTestProgress(titleString, descString, buttonString)
+	{
+		setInnerTextById("3dvideo_test_title", titleString);
+		setInnerTextById("3dvideo_test_description", descString);
+		setInnerTextById("3dvideo_test_currentMode", "");
+		setInnerTextById("btn_red", buttonString);
+	}
+
+	function displayTridMode()
+	{
+		var video = document.getElementById("video");
+		setInnerTextById("3dvideo_test_currentMode", "[Current 3D mode : " + video.mode3D + " ]");
+		jsLog.lgproperty('mode3D');
+	}
+	
+	var testStep = 1;
+	
+	function changeTestProgress()
+	{
+		var video = document.getElementById("video");
+		var sourcecode = document.getElementById("sourcecode");	
+		var view = document.getElementById("view");	
+		sourcecode.style.visibility = "hidden";
+		
+		switch(testStep)
+		{
+			case 1 :
+				if(isLGEBrowser)
+				{
+					video.play(1); 	
+					video.style.visibility="visible";
+					bodycontent.style.visibility="hidden";
+					view.style.visibility="visible";
+					view.style.color = "yellow";
+				
+					document.getElementById("btn_green").style.display="none";
+					document.getElementById("btn_yellow").style.display="none";
+					document.getElementById("btn_blue").style.display="inline";
+				}
+				jsLog.lgobject('application/x-netcast-av');
+				jsLog.lgmethod('video.play(1)');
+				setTestProgress("3D Video Test Page [Top and Bottom] (step 1)", "Now this video has started with 3D mode. <br>Press RED-Key to pause.", "PAUSE");
+				break;
+			
+			case 2 :
+				//Pause video which is being played.
+				if(isLGEBrowser){video.play(0);}
+				jsLog.lgmethod('video.play(0)');
+				setTestProgress("3D Video Test Page [Top and Bottom] (step 2)", "The video has been paused.<br>Play the video and then check if current 3D mode continues.<br>Press RED-Key to play video.", "PLAY");
+				break;
+			
+			case 3 :
+				if(isLGEBrowser){video.play(1);}
+				jsLog.lgmethod('video.play(1)');
+				setTestProgress("3D Video Test Page [Top and Bottom] (step 3)", "Video has restarted with 3D mode.<br>Check if the video is being played in 3D mode. <br>Press RED-Key to move to 60 sec position.", "MOVE to 60 sec position");
+				break;
+			
+			case 4 :
+				if(isLGEBrowser){video.seek(60000);}
+				jsLog.lgmethod('video.seek(time)');
+				setTestProgress("3D Video Test Page [Top and Bottom] (step 4)", "The time position has been moved to 60 sec position.<br>Check if 3D video is working properly.<br>Press RED-Key to stop video.", "STOP");
+				break;		
+			
+			case 5 :
+			//Stop video which is being played.
+				if(isLGEBrowser)
+					video.stop(); 
+
+				jsLog.lgmethod('video.stop()');
+			
+				setTestProgress("3D Video Test Page [Top and Bottom] (step 5)", "The video has been stopped.<br>Now 3D mode is off.<br>Press GREEN-Key to go to Side by Side mode.<br>Press YELLOW-Key to go to Checker Board mode.", "");
+				document.getElementById("btn_red").style.display="none";
+				document.getElementById("btn_blue").style.display="none";
+				document.getElementById("btn_green").style.display="inline";
+				document.getElementById("btn_yellow").style.display="inline";
+
+				break;
+		}
+		testStep++;
+	}
+	
+</script>
+</head>
+
+<body ondragstart='return false' onselectstart='return false' onload="javascript:initPage();">
+
+<div>
+	<object 
+		id ="video"
+		type="application/x-netcast-av"
+		width=1280
+		height=720
+		data="../../mediafile/3d_tb2.avi";
+		style="float: left; z-index: 1; visibility: hidden;"	
+		autoStart="false"
+		playCount="0"
+		mode3D="top_bottom">
+	</object>	
+</div>
+
+<div id='bodycontent'>
+
+	<!-- title -->
+	<div id='3dvideo_test_title' class='SuiteTitle'>LG Smart TV SDK | Web Open API Tutorial</div>
+
+	<!-- navigation -->
+	<div class='SuiteNavigation'>
+		<div style="float:left;">File : mediaplayer/app/3dvideo_test_page03.html</div>
+	</div>
+	
+	<div class='SuiteTitleLine'> </div>
+	
+	<!-- test contents -->
+	<div class='ContentArea'>
+		<div class='ApiListTitleArea'>Web Open API List</div>
+		<div class='ApiListArea'>
+			<div class='MethodTitleArea'>
+				Methods
+				<div class='MethodListArea'>
+					play(0)<br>
+					play(1)<br>
+					stop()<br>
+					seek(time)<br>
+				</div>
+			</div>
+			<div class='PropertyTitleArea'>
+				Properties
+				<div class='PropertyListArea'>
+				mode3D
+				</div>
+			</div>
+			<div class='EventTitleArea'>
+				Events
+				<div class='EventListArea'>
+
+				</div>
+			</div>
+		</div>
+
+		<div class='ViewTitleArea'>
+			<div id='tabViewArea' class='SelectedViewArea' style='float:left;' onclick="showView();">View</div>
+			<div id='tabCodeArea' class='UnselectedViewArea' style='float:right;' onclick='showCode();'>Source</div>
+		</div>
+		
+		<div id='view'>	
+			<div class='ViewArea' style="position: relative;left: 100px; top:100px;">
+				<div class='centerTestGuide' id='3dvideo_test_description' >
+				Press RED-Key to start test.<br>Press GREEN-Key to test Side By Side mode.<br>Press YELLOW-Key to test Checker Board mode.
+				</div>
+				<br>
+				
+				<div class='centerTestGuide' id='3dvideo_test_currentMode'>
+				</div>
+			</div>
+		</div>
+		
+		<div style="visibility: hidden" id='codeview'>
+			<textarea class="SourceCodeArea" value=""  id='sourcecode'></textarea>
+		</div>
+	</div>
+	
+</div>
+
+<!-- button and copyright -->	
+<div class='SuiteButtonArea'>
+	<!-- back key description -->
+	<div id='btn_back' class='buttonDescription '>BACK</div>
+	
+	<!-- exit key description -->	
+	<div id='btn_exit' class='buttonDescription'>EXIT</div>
+
+	<!-- red key description -->
+	<div id='btn_red' class='buttonDescription redColor'>START</div>
+	
+	<!-- green key description -->
+	<div id='btn_green' class='buttonDescription greenColor'>PREVIOUS</div>
+	
+	<!-- yellow key description -->
+	<div id='btn_yellow' class='buttonDescription yellowColor'>NEXT PAGE</div>
+
+	<!-- blue key description -->
+	<div id='btn_blue' class='buttonDescription blueColor'>CHECK FORMAT</div>
+
+	<!-- copyright -->
+	<div class='copyright '>Copyright LG Electronics</div>
+</div>
+
+
+</body>
+</html>

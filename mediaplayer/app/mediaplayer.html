@@ -1,0 +1,332 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>Windows Media Player API Test Page(1/3)</title>
+<link rel="stylesheet" href="../../css/style.css">
+<script language="javascript" src="../../js/keycode.js"></script>
+<script language="javascript" src="../../js/common.js"></script>
+<script language="javascript" src="../../js/menu.js"></script>
+<script language="javascript" src="../../js/media.js"></script>
+
+<script type="text/javascript" src="../../blackbirdjs/blackbird.js"></script>
+<link type="text/css" rel="Stylesheet" href="../../blackbirdjs/blackbird.css" />
+
+<script>
+
+	//initialize page
+	var buffertimer;
+	var playtimer;
+	
+	function initPage()	
+	{
+		//save page as last visited page
+		setLastVisitPage();
+		
+		//common initialize function
+		commonInitialize();		
+		requestSourceCode();
+		setPageID("Media Player");		
+		jsLog.initLG(); 
+		
+		//add onclick event handler
+	 	addEventHandler(document.getElementById("btn_back"), "click", onClickHandler);
+		addEventHandler(document.getElementById("btn_red"), "click", onClickHandler);
+		addEventHandler(document.getElementById("btn_green"), "click", onClickHandler);
+		addEventHandler(document.getElementById("btn_exit"), "click", onClickHandler);
+
+		setInnerTextById("btn_red", "PAUSE");
+		
+		//add event handler for test
+		var video = document.getElementById("video");
+
+		//add onReadyStateChange event handler
+		video.onReadyStateChange = setReadyState;
+		 
+		//add playState event handler
+		video.onBuffering = processBufferingStateChangeFunction;
+		video.onPlayStateChange = processPlayStateChangeFunction;
+				
+		jsLog.lgobject('application/x-netcast-av');	
+		jsLog.lgproperty('autoStart');
+		jsLog.lgproperty('drm_type');
+		jsLog.lgproperty('preBufferingTime');
+	}
+	
+	function setReadyState(readyState)
+	{
+		var video = document.getElementById("video");
+		var readyStateValue = video.readyState;
+		var readyStateDesc = "";
+		
+		if(readyStateValue == 0){readyStateDesc = "0 (not set)";}
+		else if(readyStateValue == 1){readyStateDesc = "1 (loading)";}
+		else if(readyStateValue == 3){readyStateDesc = "3 (loaded enough)";}
+		else if(readyStateValue == 4){readyStateDesc = "4 (loaded all)";}
+		else{readyStateDesc = readyStateValue + " (unknown state)";}
+		
+		setInnerTextById("ready_state_value", "readyState : " + readyStateDesc); 
+		jsLog.lgevent('onReadyStateChange : readyState = ' + readyState);
+	}
+	
+	function processBufferingStateChangeFunction(isStarted)
+	{
+		jsLog.lgevent('onBuffering : isStart = ' + isStarted);
+		setBufferingInfo();
+		
+		 if(isStarted)
+		 {	
+			buffertimer = setInterval(setBufferingInfo, 400); 
+			jsLog.lgmethod('video.mediaPlayInfo()');
+			jsLog.lgproperty('bufferingProgress'); 
+		 }
+		 else
+		 {
+			clearInterval(buffertimer);
+		 }
+	}
+	
+	function processPlayStateChangeFunction()
+	{
+		jsLog.lgevent('onPlayStateChange');
+		
+		var playStateExplain = "";
+		var video = document.getElementById("video");
+		var playState = video.playState;
+		
+		jsLog.lgproperty('playState :' + playState);
+		jsLog.lgproperty('speed : ' + video.speed);
+		setInnerTextById("speed_value", "speed : " + video.speed);
+		
+		if(playState == 0){playStateExplain = "stopped";}
+		else if(playState == 1){playStateExplain = "playing";}
+		else if(playState == 2){playStateExplain = "paused";}
+		else if(playState == 3){playStateExplain = "connecting";}
+		else if(playState == 4){playStateExplain = "buffering";}
+		else if(playState == 5){playStateExplain = "finished";}
+		else if(playState == 6){playStateExplain = "error";}
+		
+		setInnerTextById("play_state_value", "playState : " + playState + "(" + playStateExplain + ")");
+		
+		if(playState == 1 ){	
+			playtimer = setInterval(setPlayTimeInfo,2000); 
+		}
+		else {
+			clearInterval(playtimer);
+		}
+	}
+		
+	var testProcess = 2;
+	function processRedKey()
+	{
+		var video = document.getElementById("video");
+			
+		switch(testProcess)
+		{
+			case 0 :
+				setInnerTextById("btn_red", "Press RED-key to play video.");
+				
+			case 1 :
+				video.play(1);
+				setInnerTextById("btn_red", "PAUSE");
+				jsLog.lgmethod('video.play(1)');
+				break;
+				
+			case 2 :
+				video.play(0); 
+				setInnerTextById("btn_red", "PLAY");
+				jsLog.lgmethod('video.play(0)');
+				break;
+				
+			case 3 :
+				video.play(1);
+				setInnerTextById("btn_red", "SEEK");
+				jsLog.lgmethod('video.play(1)');
+				break;
+				
+			case 4 :
+				video.seek(60 * 1000); 
+				setInnerTextById("btn_red", "STOP");
+				jsLog.lgmethod('video.seek(time) ');
+				break;
+			
+			case 5 : 
+				video.stop();
+				setInnerTextById("btn_red", "Press RED-key to play video.");
+				jsLog.lgmethod('video.stop()');			
+				break;
+		}
+		testProcess++;
+		if(testProcess==6) testProcess=1;
+	}
+
+	function setPlayTimeInfo()
+	{
+		jsLog.lgmethod('mediaPlayInfo()');	
+		var playInfo = document.getElementById("video").mediaPlayInfo();
+		setInnerTextById("currentPosition_duration_value", "currentPosition/duration : " + playInfo.currentPosition + "/" + playInfo.duration);
+		setInnerTextById("buf_remain_value", "bufRemain : " + playInfo.bufRemain);
+		
+		jsLog.lgproperty('playTime : ' + video.playTime);
+		jsLog.lgproperty('playPosition : '+ video.playPosition);
+		setInnerTextById("playPosition_playTime_value", "playPosition/playTime : " + video.playPosition + "/" + video.playTime);
+	}
+	
+	function setBufferingInfo()
+	{
+		var video = document.getElementById("video");
+		
+		jsLog.lgmethod('mediaPlayInfo()');
+		var playInfo = video.mediaPlayInfo();
+		
+		setInnerTextById("buf_Begin_end_value", "bufBegin~bufEnd : " + playInfo.bufBegin + "~" + playInfo.bufEnd);
+		setInnerTextById("buf_remain_value", "bufRemain : " + playInfo.bufRemain);
+		setInnerTextById("buf_progress_value", "bufferingProgress : " + video.bufferingProgress + "%");
+		setInnerTextById("bitrate_value", "bitrateInstant/bitrateTarget : " + playInfo.bitrateInstant + "/" + playInfo.bitrateTarget);
+	}
+
+	//onUserInput function should be implemented
+	function onUserInput(userInput)
+	{
+		switch(userInput)
+		{
+			case VK_BACK : window.location.replace("../menu_mediaPlayer.html"); break;
+			case VK_RED : case 82 : processRedKey(); break;
+			case VK_GREEN : case 71 : window.location.replace("./mediaplayer2.html"); break;
+		}
+	}
+	
+</script>
+</head>
+
+<body ondragstart='return false' onselectstart='return false' onload="javascript:initPage();">	
+	
+<!-- title -->
+<div class='SuiteTitle' >LG Smart TV SDK | Web Open API Tutorial</div>
+
+<!-- navigation -->
+<div class='SuiteNavigation'>
+	<div style="float:left;">File : mediaplayer/app/mediaplayer.html</div>
+</div>
+
+<div class='SuiteTitleLine'> </div>
+
+<!-- test contents -->
+<div id='content_body' class='ContentArea'>
+
+	<div class='ApiListTitleArea'>Web Open API List</div>
+	<div class='ApiListArea'>
+		<div class='MethodTitleArea'>
+			Methods
+			<div class='MethodListArea'>
+				play(0)<br>
+				play(1)<br>
+				stop()<br>
+				seek(time)<br>
+				mediaPlayInfo()
+			</div>
+		</div>
+		<div class='PropertyTitleArea'>
+			Properties
+			<div class='PropertyListArea'>
+				playTime<br>
+				playPosition<br>
+				bufferingProgress<br>
+				speed<br>readyState<br>
+				playState<br>
+				autoStart<br>
+				drm_type<br>
+				preBufferingTime 
+			</div>
+		</div>
+		<div class='EventTitleArea'>
+			Events
+			<div class='EventListArea'>
+				onPlayStateChange<br>
+				onReadyStateChange<br>
+				onBuffering<br>
+			
+			</div>
+		</div>
+	</div>
+	
+	<div class='ViewTitleArea'>
+		<div id='tabViewArea' class='SelectedViewArea' style='float:left;' onclick="showView();">View</div>
+		<div id='tabCodeArea' class='UnselectedViewArea' style='float:right;' onclick='showCode();'>Source</div>
+	</div>
+	
+	<div id='view'>
+		<div class='ViewArea'>
+		<object
+			id="video"
+			type="application/x-netcast-av"
+			autoStart="true"
+			drm_type="wm-drm"
+			preBufferingTime = 5
+			width=300
+			height=250
+			data="../../mediafile/timer.mp4"
+			style="float: left">
+		</object>	
+		
+		<table border="0" cellpadding="0" cellspacing="0" style="position: relative; left: 10px;	width:450px; height:250px;">
+			<tr height="11%" >
+				<td ><div class="eachTestGuide " id="ready_state_value" >readyState :</div></td>
+			</tr> 
+			<tr height=11%>
+				<td ><div class="eachTestGuide " id="speed_value">speed :</div></td>
+			</tr>
+			<tr height="11%">
+				<td ><div class="eachTestGuide " id="currentPosition_duration_value">currentPosition/duration :</div></td>
+			</tr>
+			<tr height="11%">
+				<td><div class="eachTestGuide " id="playPosition_playTime_value">playPosition/playTime :</div></td>
+			</tr>
+			<tr height="11%">
+				<td ><div class="eachTestGuide " id="buf_Begin_end_value">bufBegin - bufEnd :</div></td>
+			</tr>
+			<tr>
+				<td><div class="eachTestGuide " id="play_state_value">playState :</div></td>
+			</tr>
+			<tr height="11%">
+				<td><div class="eachTestGuide " id="buf_remain_value">bufRemain :</div></td>
+			</tr>
+			<tr height="11%">
+				<td><div class="eachTestGuide " id="buf_progress_value">bufferingProgress :</div></td>
+			</tr>
+			<tr height="11%">
+				<td><div class="eachTestGuide " id="bitrate_value">bitrateInstant/bitrateTarget :</div></td>
+			</tr>
+		</table>
+		</div>
+	</div>	
+	
+	<div style="visibility: hidden" id='codeview'>
+		<textarea class="SourceCodeArea" value=""  id='sourcecode'></textarea>
+	</div>
+	 
+</div>
+
+
+<!-- button and copyright -->	
+<div class='SuiteButtonArea'>
+
+	<!-- button -->	
+	<div id='btn_back' class='buttonDescription'>BACK</div>
+
+	<!-- exit key description -->	
+	<div id='btn_exit' class='buttonDescription'>EXIT</div>
+	
+	<!-- red key description -->
+	<div id='btn_red' class='buttonDescription redColor'>PLAY</div>
+
+	<!-- green key description -->
+	<div id='btn_green' class='buttonDescription greenColor'>NEXT PAGE</div>
+
+	<!-- copyright -->
+	<div class='copyright'>Copyright LG Electronics</div>
+</div>
+
+</body>
+</html>
+	

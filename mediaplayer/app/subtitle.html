@@ -1,0 +1,256 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>Subtitle Test Page</title>
+<link rel="stylesheet" href="../../css/style.css">
+<script language="javascript" src="../../js/common.js"></script>
+<script language="javascript" src="../../js/keycode.js"></script>
+<script language="javascript" src="../../js/menu.js"></script>
+<script language="javascript" src="../../js/media.js"></script>
+
+<script type="text/javascript" src="../../blackbirdjs/blackbird.js"></script>
+<link type="text/css" rel="Stylesheet" href="../../blackbirdjs/blackbird.css" />
+<style type="text/css">
+	.OverLay { position: absolute; z-index:1; opacity: 1; filter: alpha(opacity = 100); }
+	body { height: 100%; }
+	html { height: 100%; }
+</style>
+<script>
+
+	//initialize page
+	function initPage()
+	{
+		//save page as last visited page
+		setLastVisitPage();
+
+		//common initialize function
+		commonInitialize();
+		requestSourceCode();		
+		setPageID("Subtitle");		
+		jsLog.initLG(); 
+		
+		//add onclick event handler
+		addEventHandler(document.getElementById("btn_back"), "click", onClickHandler);
+		addEventHandler(document.getElementById("btn_red"), "click", onClickHandler);
+		addEventHandler(document.getElementById("btn_exit"), "click", onClickHandler);
+	
+		var userAgent = new String(navigator.userAgent);
+		if (userAgent != null && userAgent.search(/LG Browser/) > -1) 
+			isLGEBrowser = true;
+		else
+			isLGEBrowser = false;
+	}
+	
+	function onUserInput(userInput)
+	{
+		switch(userInput)
+		{
+			case VK_BACK : window.location.replace("../menu_mediaPlayer.html"); break;
+			case VK_RED : case 82 : changeTestProgress(); break;
+		}
+	}
+	
+	function setTestProgress( descString, buttonString)
+	{
+		setInnerTextById("subtitle_test_description", descString);
+		setInnerTextById("btn_red", buttonString);
+	}
+	
+	var testStep = 1;
+	function changeTestProgress()
+	{
+		var video = document.getElementById("video");
+		var sourcecode = document.getElementById("sourcecode");	
+		sourcecode.style.visibility = "hidden";
+		
+		switch(testStep)
+		{ 
+			case 1 :
+				//Play video and check whether subtitle is displayed properly
+				if(isLGEBrowser)
+				{
+					video.play(1); 
+					video.subtitle="../../mediafile/cinecanvas-timing.1.dcs";	
+					video.style.visibility="visible";
+					bodycontent.style.visibility="hidden";
+					subtitle_test_description.style.visibility="visible";
+				}	
+				jsLog.lgobject('application/x-netcast-av');
+				jsLog.lgmethod('video.play(1)');
+				jsLog.lgproperty('subtitle');
+				setTestProgress( "Check whether subtitle is displayed in proper sync.<br>Compare subtitle with time shown at the bottom.<br>Press RED-Key to pause.", "PAUSE");
+				break;
+				
+			case 2 :
+				//Pause video which is being played.
+				if(isLGEBrowser){video.play(0);}
+				jsLog.lgmethod('video.play(0)');
+				setTestProgress( "The video has been paused.<br>Play the video and then check subtitle.<br>Press RED-Key to play video.", "PLAY");
+				break;
+				
+			case 3 :
+				//play video and check subtitle
+				if(isLGEBrowser){video.play(1);}
+				jsLog.lgmethod('video.play(1)');
+				setTestProgress( "Check whether subtitle is displayed in proper sync.<br>Compare subtitle with time shown at the bottom.<br>Press RED-Key to move to 60 sec position.", "MOVE to 60 sec position");
+				break;
+				
+			case 4 :
+				//seek video and check subtitle
+				if(isLGEBrowser){video.seek(60000);}
+				jsLog.lgmethod('video.seek(time)');
+		 		setTestProgress( "The time position has been moved to 60 sec position.<br>Check whether subtitle is displayed in proper sync.<br>Compare subtitle with time shown at the bottom.<br>Press RED-Key to stop video.", "STOP");
+		 		break;	 
+		 		
+			case 5 :
+				//Stop video which is being played.
+				if(isLGEBrowser){video.stop();}
+				jsLog.lgmethod('video.stop()');
+				setTestProgress( "The video has been stopped.<br>Restart the video and then check subtitle.<br>Press RED-Key to restart video.", "RESTART");
+				break;
+				
+			case 6 :
+				//Restart video and check subtitle
+			 	if(isLGEBrowser){video.play(1);}
+			 	jsLog.lgmethod('video.play(1)');
+			 	setTestProgress( "Check whether subtitle is displayed in proper sync.<br>Compare subtitle with time shown at the bottom.<br>Press RED-Key to turn subtitle off.", "SUBTITLE OFF");
+			 	break;
+			 	
+			case 7 :
+				//Turn subtitle off
+				if(isLGEBrowser){video.subtitleOn=false;}
+				jsLog.lgproperty('subtitleOn');
+				setTestProgress( "The subtitle has been turned off.<br>Check that subtitle is no longer displayed.<br>Press RED-Key to turn subtitle on.", "SUBTITLE ON");
+				break;
+				
+			case 8 :
+				//Turn subtitle on
+				if(isLGEBrowser){video.subtitleOn=true;}
+				jsLog.lgproperty('subtitleOn');
+				setTestProgress("The subtitle has been turned on.<br>Check whether subtitle is displayed in proper sync.<br>Compare subtitle with time shown at the bottom.<br>Press RED-Key to change subtitle.", "SUBTITLE CHANGE TO SAMI");
+				break;
+				
+			case 9 :
+				//change subtitle to different type of files :smi
+				if(isLGEBrowser)
+				{
+					video.subtitle="../../mediafile/smi-timing.1.smi"; 
+				}
+				jsLog.lgproperty('subtitle');
+				setTestProgress("The subtitle has been changed.<br>Check that subtitle of 'SAMI file' is displayed in proper sync.<br>Compare subtitle with time shown at the bottom.", "SUBTITLE CHANGE TO Timed Text");
+				break;
+				
+			case 10 :
+					//change subtitle to different type of files :xml
+				if(isLGEBrowser)
+				{
+					video.subtitle="../../mediafile/danish.xml"; 
+				}
+				jsLog.lgproperty('subtitle');
+				setTestProgress("The subtitle has been changed.<br>Check that subtitle of 'Timed Text file' is displayed in proper sync.<br>Compare subtitle with time shown at the bottom.<br>No more test is left on this page.", "");
+				document.getElementById("btn_red").style.display="none";
+				break;
+		}
+		if(testStep == 10) testStep = 1;
+		testStep ++;
+	}
+	
+</script>
+</head>
+
+
+<body ondragstart='return false' onselectstart='return false' onload="javascript:initPage();" >
+	
+<div>
+	<object
+		id="video"
+		type="application/x-netcast-av"
+		width=1280
+		height=720		
+		data="../../mediafile/timer.mp4"
+		style="float: left; z-index: 1; visibility: hidden;"	
+		subtitle="../../mediafile/cinecanvas-timing.1.dcs"	
+		subtitleOn=true
+		autoStart=false
+		PlayCount="0">
+	</object>	
+</div>
+	
+<div id='bodycontent'>
+	<!-- title -->
+	<div class='SuiteTitle' >LG Smart TV SDK | Web Open API Tutorial</div>
+	
+	<!-- navigation -->
+	<div class='SuiteNavigation'>
+		<div style="float:left;">File : mediaplayer/app/subtitle.html</div>
+	</div>
+	
+	<div class='SuiteTitleLine'> </div>
+	
+	<!-- test contents -->
+	<div class='ContentArea'>
+		<div class='ApiListTitleArea'>Web Open API List</div>
+		<div class='ApiListArea'>
+			<div class='MethodTitleArea'>
+				Methods
+				<div class='MethodListArea'>
+				play(0)<br>
+				play(1)<br>
+				stop()<br>
+				seek(time)<br>
+				
+				</div>
+			</div>
+			<div class='PropertyTitleArea'>
+				Properties
+				<div class='PropertyListArea'>
+				subtitle<br>
+				subtitleOn<br>
+				autoStart
+				</div>
+			</div>
+			<div class='EventTitleArea'>
+				Events
+				<div class='EventListArea'>
+				
+				</div>
+			</div>
+		</div>
+
+		<div class='ViewTitleArea'>
+			<div id='tabViewArea' class='SelectedViewArea' style='float:left;' onclick="showView();">View</div>
+			<div id='tabCodeArea' class='UnselectedViewArea' style='float:right;' onclick='showCode();'>Source</div>
+		</div>
+		
+		<div id='view'>	
+			<div class='ViewArea'>
+				<div class='centerTestGuide' style="position: relative;left: 200px; top:100px;">Press RED-Key to start test.</div>
+				<div class='ViewArea whiteColor' id='subtitle_test_description' style="position: relative;left: 200px; top:-70px; font-size: 30px; visibility: hidden;">Press RED-Key to start test.</div>
+			</div>
+		</div>
+		
+		<div style="visibility: hidden" id='codeview'>
+			<textarea class="SourceCodeArea" value=""  id='sourcecode'></textarea>
+		</div>
+	</div>
+	
+</div>
+	
+<!-- button and copyright -->	
+<div class='SuiteButtonArea '>
+	<!-- back key description -->
+	<div id='btn_back' class='buttonDescription '>BACK</div>
+		
+	<!-- exit key description -->	
+	<div id='btn_exit' class='buttonDescription'>EXIT</div>
+
+	<!-- red key description -->
+	<div id='btn_red' class='buttonDescription redColor'>PLAY</div>
+
+	<!-- copyright -->
+	<div class='copyright '>Copyright LG Electronics</div>
+</div>
+	
+</body>
+</html>

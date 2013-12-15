@@ -1,0 +1,792 @@
+/*
+	 LCD TV LABORATORY, LG ELECTRONICS INC., SEOUL, KOREA
+	 Copyright(c) 2010 by LG Electronics Inc.
+
+	 All rights reserved. No part of this work may be reproduced, stored in a
+	 retrieval system, or transmitted by any means without prior written
+	 permission of LG Electronics Inc.
+
+	 Following styles are for NetCast Test Suite.
+*/
+
+body{
+	margin:0; 
+	overflow:hidden; 
+	width:1280px; 
+	height:720px; 
+	background:#FFFFFF;
+	/*
+	background:#000000;
+	background-image: url("../subtitle/timer.mp4_000006360.jpg"); 
+	background-repeat: no-repeat;
+	background-position : 50% 50%; 
+	*/
+}
+
+.SuiteTitle{
+	position:absolute;
+	width:1250px;
+	height:100px;
+	font-size:42px;
+	padding-left :30px;
+	padding-top : 23px;
+	color:rgb(66,66,66);
+	font-family : inherit;
+	background-image: url("../image/img_splash.png") ;
+	background-position : right top;
+	background-repeat : no-repeat;
+}
+
+.SuiteTitleLine{
+	position:absolute;
+	width:1280px;
+	height:5px;
+	top:95px;
+	background-color:rgb(179,7,56);
+
+}
+
+.SuiteNavigation{
+	position:absolute;
+	width:800px;
+	height:20px;
+	left:30px;
+	top:69px;
+	font-size:20px;
+	font-family:inherit;
+	text-align:left;
+	color:rgb(106,116,123);
+}
+
+.ContentArea{
+	position:absolute;
+	width:1280px;
+	height:580px;
+	left:0px;
+	top:100px;
+}
+
+.ApiListTitleArea{
+	position:relative;
+	width:900px;
+	height:40px;
+	line-height:40px;
+	left:0px;
+	top:0px;
+	font-size:24px;
+	font-family:TiresiasScreenfont;
+	text-align:center;
+	color:rgb(66,66,66);
+	background: url("../image/bg_top_bar.png");
+	
+}
+
+.ApiListArea{
+	position:relative;
+	width:900px;
+	height:150px;
+	left:0px;
+	top:0px;
+	font-size:20px;
+	font-family:TiresiasScreenfont;
+	text-align:center;
+	color:#000000;
+	background-color:#DBEEF4;
+}
+
+.MethodTitleArea{
+	position:relative;
+	float:left;
+	width:390px;
+	height:150px;
+	line-height:23px;
+	left:0px;
+	top:0px;
+	font-size:17px;
+	font-family:TiresiasScreenfont;
+	text-align:center;
+	color:rgb(66,66,66);
+	background: url("../image/bg_mid_bar.png") repeat-x;
+	background-color:rgb(229, 229, 229);
+}
+
+.MethodListArea{
+	position:relative;
+	width:390px;
+	height:130px;
+	line-height:14px;
+	left:1px;
+	top:0px;
+	padding-top:1px;
+	padding-left:10px;
+	font-size:14px;
+	font-family:TiresiasScreenfont;
+	text-align:left;
+	color:rgb(102,102,102);
+	background-color:#FFFFFF;
+}
+
+.PropertyTitleArea{
+	position:relative;
+	float:left;
+	width:340px;
+	height:150px;
+	line-height:23px;
+	left:0px;
+	top:0px;
+	font-size:17px;
+	font-family:TiresiasScreenfont;
+	text-align:center;
+	color:rgb(66,66,66);
+	background: url("../image/bg_mid_bar.png") repeat-x;
+	background-color:rgb(229, 229, 229);
+}
+
+.PropertyListArea{
+	position:relative;
+	width:340px;
+	height:127px;
+	line-height:14px;
+	left:1px;
+	top:0px;
+	padding-top:1px;
+	padding-left:10px;
+	font-size:14px;
+	font-family:TiresiasScreenfont;
+	text-align:left;
+	color:rgb(102,102,102);
+	background-color:#FFFFFF;
+}
+.displayAreaStyle{
+	font-size:18px;
+	text-align:left;
+	color:rgb(102,102,102);
+	background-color:#FFFFFF;
+}
+.EventTitleArea{
+	position:relative;
+	float:right;
+	width:170px;
+	height:150px;
+	line-height:23px;
+	left:0px;
+	top:0px;
+	font-size:17px;
+	font-family:TiresiasScreenfont;
+	text-align:center;
+	color:rgb(66,66,66);
+	background: url("../image/bg_mid_bar.png") repeat-x;
+	background-color:rgb(229, 229, 229);
+}
+
+.EventListArea{
+	position:relative;
+	width:170px;
+	height:127px;
+	line-height:14px;
+	left:1px;
+	top:0px;
+	padding-top:1px;
+	padding-left:10px;
+	font-size:14px;
+	font-family:TiresiasScreenfont;
+	text-align:left;
+	color:rgb(102,102,102);
+	background-color:#FFFFFF;
+}
+
+
+
+.ViewTitleArea
+{
+	position:relative;
+	width:900px;
+	height:40px;
+	line-height:40px;
+	left:0px;
+	top:0px;
+	font-size:24px;
+	font-family:TiresiasScreenfont;
+	text-align:center;
+	color:#000000;
+	background: url("../image/bg_tab_n.png") repeat-x;
+}
+
+
+
+.SelectedViewArea
+{
+	position:relative;
+	width:450px;
+	height:40px;
+	line-height:40px;
+	left:0px;
+	top:0px;
+	font-size:24px;
+	font-family:TiresiasScreenfont;
+	text-align:center;
+	color:rgb(255,255,255);
+	background: url("../image/bg_tab_s_l.png") left top no-repeat, url("../image/bg_tab_s_r.png") right top no-repeat, url("../image/bg_tab_s_c.png") left top repeat-x;
+ 
+}
+.SelectedViewArea:hover
+{
+	position:relative;
+	width:450px;
+	height:40px;
+	line-height:40px;
+	left:0px;
+	top:0px;
+	font-size:24px;
+	font-family:TiresiasScreenfont;
+	text-align:center;
+	color:rgb(255,255,255);
+	clear:background;
+
+}
+
+
+
+.UnselectedViewArea
+{
+	position:relative;
+	width:450px;
+	height:40px;
+	line-height:40px;
+	left:0px;
+	top:0px;
+	font-size:24px;
+	font-family:TiresiasScreenfont;
+	text-align:center;
+	color:rgb(66,66,66);
+	background: url("../image/bg_tab_n.png") repeat-x;
+ 
+}
+
+.ViewArea{
+	position:relative;
+	width:900px;
+	height:350px;
+	left:0px;
+	top:0px;
+	padding-left:10px;
+	font-size:18px;
+	color:rgb(0,0,0);
+	font-family:TiresiasScreenfont;
+}
+
+.SourceCodeArea{
+	position:relative;
+	width:896px;
+	height:340px;
+	left:0px;
+	top:0px;
+	font-family:TiresiasScreenfont;
+	scrolling:AUTO;
+}
+
+.SuiteDescription{
+	position:absolute;
+	width:1000px;
+	height:50px;
+	left:100px;
+	top:550px;
+	font-size:30px;
+	font-family:TiresiasScreenfont;
+	text-align:center;
+}
+
+.SuiteDescriptionTwoLine{
+	position:absolute;
+	width:1000px;
+	height:100px;
+	left:100px;
+	top:500px;
+	font-size:30px;
+	font-family:TiresiasScreenfont;
+	text-align:center;
+}
+
+.SuiteButtonArea{
+	position:absolute;
+	width:1280px;
+	height:40px;
+	left:0px;
+	top:680px;	
+	background-image: url("../image/bg_bottom.png");
+	background-repeat: repeat-x;
+	background-position: left;
+}
+
+.buttonDescription_origin{
+	float:left;
+	display:inline;
+	height:40px;
+	padding-left:30px;
+	padding-right:30px;
+	font-size:30px;
+	font-family:TiresiasScreenfont;
+	text-align:center;
+	
+}
+.buttonDescription_arrow{
+	float:left;
+	width:40px;
+	height:40px;
+	margin-right:1px;
+	padding-left:10px;
+	padding-top:10px;
+	background-image: url("../image/btn_h1_n.png") ,url("../image/btn_h3_n.png"),url("../image/btn_h2_n.png"); 
+	background-repeat: no-repeat,no-repeat,repeat-x;
+	background-position: left, right, center;
+	
+}
+.buttonDescription{	
+	left:164px;
+	float:left;
+	height:40px;
+	font-size:24px;
+	min-width:80px;
+	padding-left:20px;
+	padding-right:20px;
+	padding-top:6px;
+	font-family:LG Display;
+	text-align:center;
+	color:rgb(255,255,255);
+	background-image: url("../image/btn_h1_n.png") ,url("../image/btn_h3_n.png"),url("../image/btn_h2_n.png"); 
+	background-repeat: no-repeat,no-repeat,repeat-x;
+	background-position: left, right, center;
+}
+
+.buttonDescription:hover{
+	background-image: url("../image/btn_h1_o.png") ,url("../image/btn_h3_o.png"),url("../image/btn_h2_o.png"); 
+	background-repeat: no-repeat,no-repeat,repeat-x;
+	background-position: left, right, center;
+	
+}
+.buttonDescription:ACTIVE{
+	background-image: url("../image/btn_h1_p.png") ,url("../image/btn_h3_p.png"),url("../image/btn_h2_p.png"); 
+	background-repeat: no-repeat,no-repeat,repeat-x;
+	background-position: left, right, center;
+	
+}
+.orangeColor{
+	color:#FF8000;
+}
+
+.orangeBgColor{
+	background-color:#FF8000;
+}
+
+.grayColor{
+	color:#505050;
+}
+
+.redColor{
+	color:#FF0000;
+}
+
+.greenColor{
+	color:#008000;
+}
+
+.yellowColor{
+	color:#FFFF00;
+}
+
+.blueColor{
+	color:#0000FF;
+}
+
+.whiteColor{
+	color:#FFFFFF;
+}
+
+.whiteBgColor{
+	background-color:#FFFFFF;
+}
+
+.copyright{
+	float:right;
+	display:inline;
+	position:absolute;
+	top:11px;
+	right:30px;
+	font-size:18px;
+	font-family:LG Display Font;
+	color:rgb(230,230,230) ;
+}
+
+.eachTestGuide{
+	font-size:18px;
+	font-family:TiresiasScreenfont;
+	text-align:left;
+	padding-left:10px;
+	padding-right:10px;
+	padding-top:10px;
+	padding-bottom:10px;
+	display:inline;
+	word-break:break-all;
+}
+
+.centerTestGuide{
+	font-size:30px;
+	font-family:TiresiasScreenfont;
+	text-align:center;
+	padding-left:10px;
+	padding-right:10px;
+	padding-top:10px;
+	padding-bottom:10px;
+	display:inline;
+}
+
+.eachTestProcess{
+	font-size:26px;
+	font-family:TiresiasScreenfont;
+	color:#505050;
+	display:inline;
+}
+
+.eachTestResultPass{
+	float:right;
+	display:inline;
+	font-size:30px;
+	font-family:TiresiasScreenfont;
+	color:#008000;
+}
+
+.eachTestResultFail{
+	float:right;
+	display:inline;
+	font-size:30px;
+	font-family:TiresiasScreenfont;
+	color:#FF0000;
+}
+
+.divDialogBackground{
+	background-color:#000000;
+	filter:alpha(opacity=50);
+	opacity:0.5;
+	-moz-opacity:0.5;
+	position: absolute;
+	width:1280px;
+	height:720px;
+	left:0px;
+	top:0px;
+}
+
+.divDialog{
+	position:absolute;
+	border-right:1px solid #000000;
+	border-left:1px solid #000000;
+	border-top:1px solid #000000;
+	border-bottom:1px solid #000000;
+	background-color:#FFFFFF;
+	width:800px;
+	height:300px;
+	left:239px;
+	top:209px;
+}
+
+.confirmMessage{
+	font-size:30px;
+	font-family:TiresiasScreenfont;
+	position:absolute;
+	background-color:#FFFFFF;
+	width:700px;
+	height:140px;
+	text-align:center;
+	left:50px;
+	top:40px;
+}
+
+.confirmButtonYes{
+	font-size:30px;
+	font-family:TiresiasScreenfont;
+	position:absolute;
+	border-right:1px solid #000000;
+	border-left:1px solid #000000;
+	border-top:1px solid #000000;
+	border-bottom:1px solid #000000;
+	width:240px;
+	height:40px;
+	line-height:40px;	
+	text-align:center;
+	left:129px;
+	top:209px;
+}
+
+.confirmButtonNo{
+	font-size:30px;
+	font-family:TiresiasScreenfont;
+	position:absolute;
+	border-right:1px solid #000000;
+	border-left:1px solid #000000;
+	border-top:1px solid #000000;
+	border-bottom:1px solid #000000;
+	width:240px;
+	height:40px;
+	line-height:40px;	
+	text-align:center;
+	left:429px;
+	top:209px;
+}
+
+.inputNumberField{
+	position:absolute;
+	border-right:1px solid #000000;
+	border-left:1px solid #000000;
+	border-top:1px solid #000000;
+	border-bottom:1px solid #000000;
+	background-color:#FFFFFF;
+	left:0px;
+	top:0px;
+	width:80px;
+	height:40px;
+	display:none;
+}
+
+
+
+
+
+
+/*	modified by Sungsik Kim	*/
+.eachMenuDefault
+{
+	position:absolute;
+	overflow:hidden;
+	white-space:nowrap;
+	font-size:28px;
+	font-family:TiresiasScreenfont;
+	height:61px;
+
+	background: url(../image/btn_d1_n.png) left no-repeat, url(../image/btn_d3_n.png) right no-repeat, url(../image/btn_d2_n.png) left repeat-x; 
+}
+
+.eachMenuSelected
+{
+	position:absolute;
+	overflow:hidden;
+	white-space:nowrap;
+	font-size:28px;
+	font-family:TiresiasScreenfont;
+	height:61px;
+
+	background: url(../image/btn_d1_p.png) left no-repeat, url(../image/btn_d3_p.png) right no-repeat, url(../image/btn_d2_p.png) left repeat-x; 
+}
+
+.eachMenuNo
+{
+	float:left;
+	width:60px;
+	color:#A9A9A9;
+	text-align:center;
+}
+
+.eachMenuName
+{
+	overflow:hidden;
+	white-space:nowrap;
+	float:left;
+	color:#424242;
+}
+
+.eachMenuDefault:hover
+{
+	background: url(../image/btn_d1_o.png) left no-repeat, url(../image/btn_d3_o.png) right no-repeat, url(../image/btn_d2_o.png) left repeat-x;
+}
+
+.eachMenuDefault:hover .eachMenuNo
+{
+	color:#A9A9A9;
+}
+
+.eachMenuDefault:hover .eachMenuName
+{
+	color:#424242;
+}
+
+.eachMenuDefault:active
+{
+	background: url(../image/btn_d1_p.png) left no-repeat, url(../image/btn_d3_p.png) right no-repeat, url(../image/btn_d2_p.png) left repeat-x; 
+}
+
+.eachMenuDefault:active .eachMenuNo
+{
+	color:#BA6D86; 
+}
+
+.eachMenuDefault:active .eachMenuName
+{
+	color:#FFFFFF; 
+}
+
+.eachMenuSelected:hover
+{
+	background: url(../image/btn_d1_o.png) left no-repeat, url(../image/btn_d3_o.png) right no-repeat, url(../image/btn_d2_o.png) left repeat-x;
+}
+
+.eachMenuSelected:hover .eachMenuNo
+{
+	color:#A9A9A9;
+}
+
+.eachMenuSelected:hover .eachMenuName
+{
+	color:#424242;
+}
+
+.eachMenuSelected:active
+{
+	background: url(../image/btn_d1_p.png) left no-repeat, url(../image/btn_d3_p.png) right no-repeat, url(../image/btn_d2_p.png) left repeat-x; 
+}
+
+.eachMenuSelected:active .eachMenuNo
+{
+	color:#BA6D86; 
+}
+
+.eachMenuSelected:active .eachMenuName
+{
+	color:#FFFFFF; 
+}
+
+.executeButton
+{
+	display:block;
+	color:#FFFFFF;
+	background-color:#98bf21;
+	font-weight:bold;
+	width:120px;
+	text-align:center;
+	padding:0;
+	padding-top:3px;
+	padding-bottom:4px;
+	border:1px solid #ffffff;
+	outline:1px solid #98bf21;
+	text-decoration:none;
+	margin-left:1px;
+}
+
+.executeButton:hover
+{
+	background-color:#7A991A;
+}
+
+.executeBigButton
+{
+	display:block;
+	color:#FFFFFF;
+	background-color:#98bf21;
+	font-weight:bold;
+	width:320px;
+	text-align:center;
+	padding:0;
+	padding-top:3px;
+	padding-bottom:4px;
+	border:1px solid #ffffff;
+	outline:1px solid #98bf21;
+	text-decoration:none;
+	margin-left:1px;
+}
+
+.executeBigButton:hover
+{
+	background-color:#7A991A;
+}
+
+.executeMiddleButton
+{
+	display:block;
+	color:#FFFFFF;
+	background-color:#98bf21;
+	font-weight:bold;
+	width:160px;
+	text-align:center;
+	padding:0;
+	padding-top:3px;
+	padding-bottom:4px;
+	border:1px solid #ffffff;
+	outline:1px solid #98bf21;
+	text-decoration:none;
+	margin-left:1px;
+}
+
+.executeMiddleButton:hover
+{
+	background-color:#7A991A;
+}
+
+.executeBigButtonOff
+{
+	display:block;
+	color:#666666;
+	background-color:#98bf53;
+	font-weight:bold;
+	width:320px;
+	text-align:center;
+	padding:0;
+	padding-top:3px;
+	padding-bottom:4px;
+	border:1px solid #ffffff;
+	outline:1px solid #98bf21;
+	text-decoration:none;
+	margin-left:1px;
+}
+.gaugeBorder{
+   border-right:1px solid #000000;
+   border-left:1px solid #000000;
+   border-top:1px solid #000000;
+   border-bottom:1px solid #000000;
+   width:273px;
+   height:38px;
+ }
+ .gaugeBar{
+   height:38px;
+   line-height:38px;
+   background-color:#008000;
+   font-size:26px;
+   font-family:TiresiasScreenfont;
+   text-align:center;
+   width:0px;
+ }
+.popupNotification
+{
+	position:absolute;
+	display:block;
+	padding:30px;
+	color:black;
+	background-color:#B30738;
+	border-style:inset;
+	font-size:24px;
+	text-align:center;
+	z-index:200;
+}
+.notificationOverlay{
+	position:absolute;
+	display:block;
+	width:1280px;
+	height:500px;
+	top:100px;
+}
+
+.normalButton
+{
+	font-size:24px;
+	text-align:center;
+	height:50px;
+	width:100px;
+}
+
+
+/*BannerAd*/
+
+.fullScreenContent
+{
+	position:absolute;
+	width:1280px;
+	height:720px;
+	visibility:hidden;
+	z-index:0;
+}

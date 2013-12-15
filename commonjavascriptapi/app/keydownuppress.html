@@ -1,0 +1,365 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>Key Down/Up/Press Test Page</title>
+<link rel="stylesheet" href="../../css/style.css">
+<script language="javascript" src="../../js/keycode.js"></script>
+<script language="javascript" src="../../js/common.js"></script>
+<script language="javascript" src="../../js/menu.js"></script>
+
+<script type="text/javascript" src="../../blackbirdjs/blackbird.js"></script>
+<link type="text/css" rel="Stylesheet" href="../../blackbirdjs/blackbird.css" />
+
+<script>
+
+	var keysToTestArray = [["div_01", "OK", 13, "d_p_u"]
+						,["div_02", "PLAY", 415, "d_u"]
+						,["div_03", "PAUSE", 19, "d_u"]
+						,["div_04", "STOP", 413, "d_u"]
+	 					,["div_05", "REWIND", 412, "d_u"]
+						,["div_06", "FAST_FWD", 417, "d_u"]
+						,["div_07", "PAGE_UP", 33, "d_u"]
+						,["div_08", "PAGE_DOWN", 34, "d_u"]
+						,["div_09", "LEFT", 37, "d_u"]
+	 					,["div_10", "RIGHT", 39, "d_u"]
+						,["div_11", "UP", 38, "d_u"]
+						,["div_12", "DOWN", 40, "d_u"]
+						,["div_13", "NUMBER 0", 48, "d_p_u"]
+						,["div_14", "NUMBER 1", 49, "d_p_u"]
+						,["div_15", "NUMBER 2", 50, "d_p_u"]
+						,["div_16", "NUMBER 3", 51, "d_p_u"]
+						,["div_17", "NUMBER 4", 52, "d_p_u"]
+						,["div_18", "NUMBER 5", 53, "d_p_u"]
+						,["div_19", "NUMBER 6", 54, "d_p_u"]
+						,["div_20", "NUMBER 7", 55, "d_p_u"]
+						,["div_21", "NUMBER 8", 56, "d_p_u"]
+						,["div_22", "NUMBER 9", 57, "d_p_u"]
+						,["div_23", "RED", 403, "d_u"]
+						,["div_24", "GREEN", 404, "d_u"]
+						,["div_25", "YELLOW", 405, "d_u"]
+						,["div_26", "BLUE", 406, "d_u"]
+						,["div_27", "INFO", 457, "d_u"]
+						,["div_28", "BACK", 461, "d_u"]
+						,["div_29", "PORTAL", 1000, "d_u"]];
+
+	//initialize page
+	function initPage()
+	{
+		//save page as last visited page
+		setLastVisitPage();
+		
+		//common initialize function
+		commonInitialize();
+		requestSourceCode();
+		setPageID("Key Down/Up/Press");
+		jsLog.initLG();
+	
+		//add onclick event handler
+		addEventHandler(document.getElementById("btn_back"), "click", backHandler);
+		addEventHandler(document.getElementById("btn_exit"), "click", onClickHandler);
+		addEventHandler(document.getElementById("btn_reset"), "click", resetHandler);
+	
+		//add event handler for menu		
+		addEventHandler(document.body, "keydown", menuKeyHandler);
+
+		//set keys to test
+		setKeysOnScreen();
+		
+		//add event handler to test
+		setTimeout(initTest,700);
+		
+		var device = document.getElementById("device");
+		if(! device.supportPortalKey)
+		{
+			document.getElementById("div_29").style.visibility = "hidden";
+		}			
+	}
+	
+	function initTest()
+	{
+		addEventHandler(document.body, "keydown", testKeyDown);
+		addEventHandler(document.body, "keyup", testKeyUp);
+		addEventHandler(document.body, "keypress", testKeyPress);
+		initTestProgress();
+	}
+	
+	function backHandler()
+	{
+		window.location.replace("../menu_commonjavascriptapi.html");
+	}
+
+	function resetHandler()
+	{
+		initTestProgress();
+	}
+	
+	var backToYellow = false;
+	var resetToGreen = false;
+	var hasMenuExecuted = false;
+	
+	function menuKeyHandler(event)
+	{
+		var userInput = getKeyCode(event);
+		switch(userInput)
+		{
+			case VK_BACK : if(!backToYellow){backHandler(); hasMenuExecuted = true;} break;
+			case VK_RED : case 82 : if(!resetToGreen){resetHandler(); hasMenuExecuted = true;} break;
+			case VK_GREEN : case 71 : if(resetToGreen){resetHandler(); hasMenuExecuted = true;} break;
+			case VK_YELLOW : case 89 : if(backToYellow){backHandler(); hasMenuExecuted = true;} break;
+		}
+	}
+	
+	var keyEventGathering = "";
+		
+	function testKeyDown(event)
+	{
+		keyEventGathering += "_down_" + getKeyCode(event);
+		jsLog.lgevent('javascript: Key Event Handling : KeyDown, Key : ' + getKeyName(event));
+	}
+	
+	function testKeyPress(event)
+	{
+		jsLog.lgevent('javascript: Key Event Handling : KeyPress, Key : ' + getKeyName(event));
+		if(menuKeyHandler(event, true) == "menuExecuted"){return;}
+		keyEventGathering += "_press_" + getKeyCode(event);
+	}
+	
+	function testKeyUp(event)
+	{
+		keyEventGathering += "_up_" + getKeyCode(event);
+		jsLog.lgevent('javascript: Key Event Handling : KeyUp, Key : ' + getKeyName(event));
+		if(hasMenuExecuted){
+			hasMenuExecuted = false;
+			keyEventGathering = "";
+		}else{
+			checkEachResult();
+		}
+	}	
+	
+	function setSelectedKey(selectedKeyIndex)
+	{
+		for(var i = 0 ; i < keysToTestArray.length ; i++)
+		{
+			if(selectedKeyIndex == i){
+			document.getElementById(keysToTestArray[i][0]).style.backgroundColor = "#FF8000";
+			}else{
+			document.getElementById(keysToTestArray[i][0]).style.backgroundColor = "";
+			}
+		}
+	}
+	
+	var currentKeyIndex = 0;
+	
+	function initTestProgress()
+	{
+		currentKeyIndex = 0;
+		for(var i = 0 ; i < keysToTestArray.length ; i++)
+		{
+			document.getElementById(keysToTestArray[i][0]).className = "eachTestGuide";
+		}
+		setSelectedKey(0);
+		setInnerTextById("keydownuppress_test_description", "Press OK-Key to test Key-Events and Key-Code.");
+	 }
+	
+	//set keys to test
+	function setKeysOnScreen()
+	{
+		for(var i = 0 ; i < keysToTestArray.length ; i++)
+		{
+			setInnerTextById(keysToTestArray[i][0], keysToTestArray[i][1]);
+		}
+	}
+		
+	function checkEachResult()
+	{
+		if(currentKeyIndex >= keysToTestArray.length){return;}
+		var keyGatheringToCompare = "";
+		
+		if(keysToTestArray[currentKeyIndex][3] == "d_p_u"){
+			keyGatheringToCompare = "_down_" + keysToTestArray[currentKeyIndex][2]
+									+ "_press_" + keysToTestArray[currentKeyIndex][2]
+									+ "_up_" + keysToTestArray[currentKeyIndex][2];
+		}else if(keysToTestArray[currentKeyIndex][3] == "d_u"){
+			keyGatheringToCompare = "_down_" + keysToTestArray[currentKeyIndex][2]
+									+ "_up_" + keysToTestArray[currentKeyIndex][2];
+		}else{
+			keyGatheringToCompare = "";
+		}
+		
+		if(keyEventGathering == keyGatheringToCompare){
+			document.getElementById(keysToTestArray[currentKeyIndex][0]).className += " greenColor";
+		}else{
+			document.getElementById(keysToTestArray[currentKeyIndex][0]).className += " redColor";
+		}
+		
+		keyEventGathering = "";
+		//in case just tested red key
+		if(keysToTestArray[currentKeyIndex][1] == "RED"){
+			resetToGreen = false;
+			document.getElementById("btn_reset").className = "buttonDescription redColor";
+		}
+		//in case just tested back key
+		if(keysToTestArray[currentKeyIndex][1] == "BACK"){
+			backToYellow = false;
+			document.getElementById("btn_back").className = "buttonDescription whiteColor";
+		}
+
+		currentKeyIndex++;
+		if(currentKeyIndex < keysToTestArray.length){
+			setSelectedKey(currentKeyIndex);
+			var device = document.getElementById("device");
+			if((keysToTestArray[currentKeyIndex][1]=="PORTAL") && !device.supportPortalKey){
+				if(! device.supportPortalKey){
+					setInnerTextById("keydownuppress_test_description", "Press " + "RESET" + "-Key to test Key-Events and Key-Code.");
+				}
+			}else{
+				setInnerTextById("keydownuppress_test_description", "Press " + keysToTestArray[currentKeyIndex][1] + "-Key to test Key-Events and Key-Code.");
+			}
+			
+			//in case next test is red key
+			if(keysToTestArray[currentKeyIndex][1] == "RED"){
+				resetToGreen = true;
+			document.getElementById("btn_reset").className = "buttonDescription yellowColor";
+			}
+			//in case next testis back key
+			if(keysToTestArray[currentKeyIndex][1] == "BACK"){
+				backToYellow = true;
+				document.getElementById("btn_back").className = "buttonDescription yellowColor";
+			}
+		}else{
+			setSelectedKey(-1);
+			setInnerTextById("keydownuppress_test_description", "No more test is left on this page.");
+		}
+	}
+	
+	function getKeyName(event)
+	{
+		var key = getKeyCode(event);
+		for(var i = 0 ; i < keysToTestArray.length ; i++)
+		{
+			if(keysToTestArray[i][2] == key)
+			{
+				return keysToTestArray[i][1];
+			}
+		}
+		
+		return "";
+	}
+
+</script>
+</head>
+
+<body ondragstart='return false' onselectstart='return false' onload="javascript:initPage();">
+
+<!-- title -->
+<div class='SuiteTitle' >LG Smart TV SDK | Web Open API Tutorial</div>
+<object type="application/x-netcast-info"
+		id="device">
+</object>
+<!-- navigation -->
+
+<div class='SuiteNavigation'>
+	<div style="float:left;">File : commonjavascriptapi/app/keydownuppress.html</div>
+</div>
+<div class='SuiteTitleLine'> </div>
+<!-- test contents -->
+<div class='ContentArea'>
+	<div class='ApiListTitleArea'>Web Open API List</div>
+	<div class='ApiListArea'>
+		<div class='MethodTitleArea'>
+			Methods
+			<div class='MethodListArea'>
+			
+			</div>
+		</div>
+		<div class='PropertyTitleArea'>
+			Properties
+			<div class='PropertyListArea'>
+			
+			</div>
+		</div>
+		<div class='EventTitleArea'>
+			Events
+			<div class='EventListArea'>
+			
+			</div>
+		</div>
+	</div>
+	<div class='ViewTitleArea'>
+		<div id='tabViewArea' class='SelectedViewArea' style='float:left;' onclick="showView();">View</div>
+		<div id='tabCodeArea' class='UnselectedViewArea' style='float:right;' onclick='showCode();'>Source</div>
+	</div>	
+	<div id='view'>
+		<div class = 'ViewArea'>		
+			<table width="880px" border="0" cellpadding="0" cellspacing="0">
+				<tr height="50px">
+				<td width=200px align=left><div class='eachTestGuide' id="div_01"></div></td>
+				<td width=200px align=left><div class='eachTestGuide' id="div_02"></div></td>
+				<td width=200px align=left><div class='eachTestGuide' id="div_03"></div></td>
+				<td width=200px align=left><div class='eachTestGuide' id="div_04"></div></td>
+				<td width=200px align=left><div class='eachTestGuide' id="div_05"></div></td>
+				</tr>
+				<tr height="50px">
+				<td width=200px align=left><div class='eachTestGuide' id="div_06"></div></td>
+				<td width=200px align=left><div class='eachTestGuide' id="div_07"></div></td>
+				<td width=200px align=left><div class='eachTestGuide' id="div_08"></div></td>
+				<td width=200px align=left><div class='eachTestGuide' id="div_09"></div></td>
+				<td width=200px align=left><div class='eachTestGuide' id="div_10"></div></td>
+				</tr>
+				<tr height="50px">
+				<td width=200px align=left><div class='eachTestGuide' id="div_11"></div></td>
+				<td width=200px align=left><div class='eachTestGuide' id="div_12"></div></td>
+				<td width=200px align=left><div class='eachTestGuide' id="div_13"></div></td>
+				<td width=200px align=left><div class='eachTestGuide' id="div_14"></div></td>
+				<td width=200px align=left><div class='eachTestGuide' id="div_15"></div></td>
+				</tr>
+				<tr height="50px">
+				<td width=200px align=left><div class='eachTestGuide' id="div_16"></div></td>
+				<td width=200px align=left><div class='eachTestGuide' id="div_17"></div></td>
+				<td width=200px align=left><div class='eachTestGuide' id="div_18"></div></td>
+				<td width=200px align=left><div class='eachTestGuide' id="div_19"></div></td>
+				<td width=200px align=left><div class='eachTestGuide' id="div_20"></div></td>
+				</tr>
+				<tr height="50px">
+				<td width=200px align=left><div class='eachTestGuide' id="div_21"></div></td>
+				<td width=200px align=left><div class='eachTestGuide' id="div_22"></div></td>
+				<td width=200px align=left><div class='eachTestGuide' id="div_23"></div></td>
+				<td width=200px align=left><div class='eachTestGuide' id="div_24"></div></td>
+				<td width=200px align=left><div class='eachTestGuide' id="div_25"></div></td>
+				</tr>
+				<tr height="50px">
+				<td width=200px align=left><div class='eachTestGuide' id="div_26"></div></td>
+				<td width=200px align=left><div class='eachTestGuide' id="div_27"></div></td>
+				<td width=200px align=left><div class='eachTestGuide' id="div_28"></div></td>
+				<td width=200px align=left><div class='eachTestGuide' id="div_29"></div></td>
+				<td width=200px align=left><div class='eachTestGuide' id="div_30"></div></td>
+				</tr>
+			</table>
+		</div>
+	</div>
+	<div	scrolling="AUTO" style="visibility: hidden" id='codeview'>
+		<textarea class="SourceCodeArea" value=""  id='sourcecode'></textarea>
+	</div>	
+</div>
+
+<!-- description -->	
+<div id='keydownuppress_test_description' class='SuiteDescription' style="position: absolute; left: 40px; top:630px"></div>
+
+<!-- button and copyright -->	
+<div class='SuiteButtonArea'>
+	<!-- back key description -->
+	<div id='btn_back' class='buttonDescription'>BACK</div>
+
+	<!-- exit key description -->	
+	<div id='btn_exit' class='buttonDescription'>EXIT</div>
+
+	<!-- red key description -->
+	<div id='btn_reset' class='buttonDescription redColor'>RESET</div>
+
+	<!-- copyright -->
+	<div class='copyright'>Copyright LG Electronics</div>
+</div>
+
+</body>
+</html>

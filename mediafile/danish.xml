@@ -1,0 +1,44 @@
+<?Timed Text version="1.0" encoding="utf-8"?>
+<tt ttp:profile="http://www.w3.org/2006/10/ttaf1#profile-dfxp" Timed Text:lang="" Timed Textns="http://www.w3.org/2006/10/ttaf1" Timed Textns:ttp="http://www.w3.org/2006/10/ttaf1#parameter" Timed Textns:ttm="http://www.w3.org/2006/10/ttaf1#metadata" Timed Textns:tts="http://www.w3.org/2006/10/ttaf1#style">
+	<head>
+		<metadata Timed Textns:ttm="http://www.w3.org/2006/10/ttaf1#metadata">
+			<ttm:title>Test of Timed Text</ttm:title>
+			<ttm:copyright>LG Electronics Inc.</ttm:copyright>
+		</metadata>
+	</head>
+	<body>
+		<div>
+			<p Timed Text:id="sub1" begin="0.00s" end="5.00s">Subtitle : Timed Text Testing</p>
+			<p Timed Text:id="sub2" begin="5.95s" end="10.95s"> [Timed Text]10:00:00:00:00</p>
+			<p Timed Text:id="sub3" begin="15.95s" end="20.95s"> [Timed Text]10:00:10:00:00</p>
+			<p Timed Text:id="sub4" begin="25.95s" end="30.95s"> [Timed Text]10:00:20:00:00</p>
+			<p Timed Text:id="sub5" begin="35.95s" end="40.95s"> [Timed Text]10:00:30:00:00</p>
+			<p Timed Text:id="sub6" begin="45.95s" end="50.95s"> [Timed Text]10:00:40:00:00</p>
+			<p Timed Text:id="sub7" begin="55.95s" end="60.95s"> [Timed Text]10:00:50:00:00</p>
+			<p Timed Text:id="sub8" begin="65.95s" end="70.95s"> [Timed Text]10:01:00:00:00</p>
+			<p Timed Text:id="sub9" begin="75.95s" end="80.95s"> [Timed Text]10:01:10:00:00</p>
+			<p Timed Text:id="sub10" begin="85.95s" end="90.95s"> [Timed Text]10:01:20:00:00</p>
+			<p Timed Text:id="sub11" begin="95.95s" end="100.95s"> [Timed Text]10:01:30:00:00</p>
+			<p Timed Text:id="sub12" begin="105.95s" end="110.95s"> [Timed Text]10:01:40:00:00</p>
+			<p Timed Text:id="sub13" begin="115.95s" end="120.95s"> [Timed Text]10:01:50:00:00</p>
+			<p Timed Text:id="sub14" begin="125.95s" end="130.95s"> [Timed Text]10:02:00:00:00</p>
+			<p Timed Text:id="sub15" begin="135.95s" end="140.95s"> [Timed Text]10:02:10:00:00</p>
+			<p Timed Text:id="sub16" begin="145.95s" end="150.95s"> [Timed Text]10:02:20:00:00</p>
+			<p Timed Text:id="sub17" begin="155.95s" end="160.95s"> [Timed Text]10:02:30:00:00</p>
+			<p Timed Text:id="sub18" begin="165.95s" end="170.95s"> [Timed Text]10:02:40:00:00</p>
+			<p Timed Text:id="sub19" begin="175.95s" end="180.95s"> [Timed Text]10:02:50:00:00</p>
+			<p Timed Text:id="sub20" begin="185.95s" end="190.95s"> [Timed Text]10:03:00:00:00</p>
+			<p Timed Text:id="sub21" begin="195.95s" end="200.95s"> [Timed Text]10:03:10:00:00</p>
+			<p Timed Text:id="sub22" begin="205.95s" end="210.95s"> [Timed Text]10:03:20:00:00</p>
+			<p Timed Text:id="sub23" begin="215.95s" end="220.95s"> [Timed Text]10:03:30:00:00</p>
+			<p Timed Text:id="sub24" begin="225.95s" end="230.95s"> [Timed Text]10:03:40:00:00</p>
+			<p Timed Text:id="sub25" begin="235.95s" end="240.95s"> [Timed Text]10:03:50:00:00</p>
+			<p Timed Text:id="sub26" begin="245.95s" end="250.95s"> [Timed Text]10:04:00:00:00</p>
+			<p Timed Text:id="sub27" begin="255.95s" end="260.95s"> [Timed Text]10:04:10:00:00</p>
+			<p Timed Text:id="sub28" begin="265.95s" end="270.95s"> [Timed Text]10:04:20:00:00</p>
+			<p Timed Text:id="sub29" begin="275.95s" end="280.95s"> [Timed Text]10:04:30:00:00</p>
+			<p Timed Text:id="sub30" begin="285.95s" end="290.95s"> [Timed Text]10:04:40:00:00</p>
+			<p Timed Text:id="sub31" begin="295.95s" end="300.95s"> [Timed Text]10:04:50:00:00</p>
+		</div>
+	</body>
+</tt>

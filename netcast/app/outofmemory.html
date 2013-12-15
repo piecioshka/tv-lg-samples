@@ -1,0 +1,272 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>OutOfMemory Event Test Page</title>
+<link rel="stylesheet" href="../../css/style.css">
+<script language="javascript" src="../../js/keycode.js"></script>
+<script language="javascript" src="../../js/media.js"></script>
+<script language="javascript" src="../../js/common.js"></script>
+<script language="javascript" src="../../js/menu.js"></script>
+
+<script type="text/javascript" src="../../blackbirdjs/blackbird.js"></script>
+<link type="text/css" rel="Stylesheet" href="../../blackbirdjs/blackbird.css" />
+
+<script>
+
+	//initialize page
+	function initPage()
+	{
+		//save as last visited page
+		setLastVisitPage();
+
+		//common initialize function
+		commonInitialize();
+		requestSourceCode();
+		setPageID("Out Of Memory");
+		jsLog.initLG();
+
+		//add onclick event handler
+		addEventHandler(document.getElementById("btn_back"), "click", onClickHandler);
+		addEventHandler(document.getElementById("btn_red"), "click", onClickHandler);
+		addEventHandler(document.getElementById("btn_green"), "click", onClickHandler);
+		addEventHandler(document.getElementById("btn_yellow"), "click", onClickHandler);
+		addEventHandler(document.getElementById("btn_exit"), "click", onClickHandler);
+		
+		displayStatus();
+	
+		//add outofmemory event handler
+		addEventHandler(window, "outofmemory", outOfMemoryHandler);
+		
+		getUsedMemorySize();
+	}
+	 
+	function onUserInput(userInput)
+	{
+		switch(userInput)
+		{
+			case VK_BACK : window.location.replace("../menu_netcast.html"); break;
+			case VK_RED : case 82 : loadMoreImages(1); break;
+			case VK_GREEN : case 71 : loadMoreImages(5); break;
+			case VK_YELLOW : case 89 : loadMoreImages(10); break;
+		}
+	}
+	
+	function loadMoreImages(numberToLoad)
+	{
+		for(var i = 0 ; i < numberToLoad ; i++)
+			loadOneImage();
+	}
+	
+	var numberOfLoadedImages = 0;
+	var EACH_IMG_SIZE = 2880054;
+	var DEFAULT_LEFT = 0;
+	var DEFAULT_TOP = 0;
+	var DEFAULT_IMG_LEFT = 100;
+	var DEFAULT_IMG_TOP = 500;
+	var TOTAL_WIDTH = 900;
+	var TOTAL_HEIGHT = 50;
+	var MAX_COLUMN_INDEX = 50;
+	var MAX_ROW_INDEX = 2;
+	
+	function loadOneImage()
+	{
+		if(MAX_COLUMN_INDEX * MAX_ROW_INDEX == numberOfLoadedImages)
+			return;
+
+ 		//create div and set an image as background
+	 	var widthToSet = Math.floor(TOTAL_WIDTH / MAX_COLUMN_INDEX);
+	 	var heightToSet = Math.floor(TOTAL_HEIGHT / MAX_ROW_INDEX);
+	 	var leftToSet = Math.floor((TOTAL_WIDTH / MAX_COLUMN_INDEX) * (numberOfLoadedImages % MAX_COLUMN_INDEX));
+	 	var topToSet = Math.floor((TOTAL_HEIGHT / MAX_ROW_INDEX) * Math.floor(numberOfLoadedImages / MAX_COLUMN_INDEX));
+	 	
+	 	var bgImgIndex = "";
+	 	
+	 	if(String(numberOfLoadedImages).length == 1){bgImgIndex = "00";}
+	 	else if(String(numberOfLoadedImages).length == 2){bgImgIndex = "0";}
+	 	else if(String(numberOfLoadedImages).length == 3){bgImgIndex = "";}
+	 	
+	 	bgImgIndex += String(numberOfLoadedImages);
+	 	var bgUrlToSet = getMediaFileUrl("memoryTestImages") + "lake-nature_" + bgImgIndex + ".bmp";
+	 	
+	 	var divToAppend = document.createElement("div");
+	 	
+	 	divToAppend.style.position = "absolute";
+	 	divToAppend.style.width = (widthToSet - 2) + "px";
+	 	divToAppend.style.height = (heightToSet - 2) + "px";
+	 	divToAppend.style.border = "1px solid #000000";
+	 	divToAppend.style.left = leftToSet + "px";
+	 	divToAppend.style.top = topToSet + "px";
+	 	divToAppend.style.background = "url(" + bgUrlToSet + ")";
+	 	divToAppend.style.backgroundPosition = "-" + (DEFAULT_IMG_LEFT + leftToSet) + "px -" + (DEFAULT_IMG_TOP + topToSet) + "px";
+	 	divToAppend.style.backgroundRepeat = "no-repeat";
+	 	document.getElementById("ViewArea").appendChild(divToAppend);
+	 	numberOfLoadedImages++;
+	 	displayStatus();
+	}
+	
+	
+	function displayStatus()
+	{
+			setInnerTextById("number_of_loaded_image_result", numberOfLoadedImages + "/" + (MAX_COLUMN_INDEX * MAX_ROW_INDEX));
+		 	var totalSize = EACH_IMG_SIZE * numberOfLoadedImages;
+		 	setInnerTextById("total_image_size_result", toCommaNotation(String(totalSize)) + " bytes");
+	}
+	
+	
+	function toCommaNotation(origString)
+	{
+		var unitToSep = 3;
+		var resultString = "";
+		var processString = origString;
+		
+		while(processString.length > unitToSep)
+		{
+			var cutIndex = processString.length - unitToSep;
+			var resultString = "," + processString.substring(cutIndex) + resultString;
+			processString = processString.substring(0, cutIndex);
+		}
+		resultString = processString + resultString;
+		return resultString;
+	}
+
+	var resultString = " ";
+	var eventCount = 0;
+	
+	function outOfMemoryHandler()
+	{
+		jsLog.lgevent('outofmemory');	
+		eventCount++;
+		
+		if(eventCount == 1)
+			resultString += eventCount + " - " + event.available + " MB";
+		else
+			resultString += " / " + eventCount + " - " + event.available + " MB";
+	
+		setInnerTextById("out_of_memory_event_occurred", resultString);
+	}
+	
+	var usedMemorySize;
+	function getUsedMemorySize()
+	{
+		if(window.NetCastGetUsedMemorySize)
+		{
+			usedMemorySize = window.NetCastGetUsedMemorySize();
+			setInnerTextById("used_memory_result", usedMemorySize);
+			jsLog.lgproperty('NetCastGetUsedMemorySize');	
+		}		
+	}
+		
+</script>
+</head>
+
+<body ondragstart='return false' onselectstart='return false' onload="javascript:initPage();">
+	
+<!-- title -->
+<div class='SuiteTitle' >LG Smart TV SDK | Web Open API Tutorial</div>
+
+<!-- navigation -->
+<div class='SuiteNavigation'>
+	<div style="float:left;">File : netcast/app/outofmemory.html</div>
+</div>
+
+<div class='SuiteTitleLine'> </div>
+
+<!-- test contents -->
+	<div class='ContentArea'>
+		<div class='ApiListTitleArea'>Web Open API List</div>
+		<div class='ApiListArea'>
+			<div class='MethodTitleArea'>
+				Methods
+				<div class='MethodListArea'>
+
+				</div>
+			</div>
+			<div class='PropertyTitleArea'>
+				Properties
+				<div class='PropertyListArea'>
+				NetCastGetUsedMemorySize			
+				</div>
+			</div>
+			<div class='EventTitleArea'>
+				Events
+				<div class='EventListArea'>
+				outofmemory
+				</div>
+			</div>
+		</div>
+	
+		<div class='ViewTitleArea'>
+			<div id='tabViewArea' class='SelectedViewArea' style='float:left;' onclick="showView();">View</div>
+			<div id='tabCodeArea' class='UnselectedViewArea' style='float:right;' onclick='showCode();'>Source</div>
+		</div>
+		
+		<div id='view'>	
+			<div class='ViewArea' id= 'ViewArea' style="position: relative;">
+				<table border="0" cellpadding="0" cellspacing="0">
+					<tr height="50px">
+						<td width=100px align="left"></td>
+					</tr>
+					<tr height="50px">
+						<td width=300px align=left>1. Each image size :</td>
+						<td width=500px align="left">2,880,054 bytes</td>
+						<td width=100px align="left"></td>
+					</tr>
+					<tr height="50px">
+						<td width=300px align=left>2. Number of loaded images :</td>
+						<td width=500px align="left"><div id="number_of_loaded_image_result"></div></td>
+						<td width=100px align="left"></td>
+					</tr>
+					<tr height="50px">
+						<td width=300px align=left>3. Total image size :</td>
+						<td width=500px align="left"><div id="total_image_size_result"></div></td>
+						<td width=100px align="left"></td>
+					</tr>
+					<tr height="50px">
+						<td width=300px align=left>4. OutOfMemory Event :</td>
+						<td width=500px align="left"><div id="out_of_memory_event_occurred"></div></td>
+						<td width=100px align="left"></td>
+					</tr>
+					<tr height="50px">																				
+						<td width="200px" align=left><div>5. Used Memory Size : </div></td>									 
+						<td align="left"><div id="used_memory_result"></div></td>							 
+					</tr>					
+					<tr height="50px">
+						<td width=3000px align=center> Press Red / Green / Yellow key to load more image(s)<br>
+						Check if "outofmemory" event occurs and available memory is acceptable.</td>
+					</tr>
+				</table>
+			</div>
+		</div>
+		
+		<div style="visibility: hidden" id='codeview'>
+			<textarea class="SourceCodeArea" value=""  id='sourcecode'></textarea>
+		</div>		
+
+	</div>
+
+
+ 
+<!-- button and copyright -->	
+<div class='SuiteButtonArea'>
+	<!-- back key description -->
+	<div id='btn_back' class='buttonDescription '>BACK</div>
+
+	<!-- exit button -->	
+	<div id='btn_exit' class='buttonDescription'>EXIT</div>
+
+	<!-- red key description -->
+	<div id='btn_red' class='buttonDescription redColor'>LOAD 1</div>
+
+	<!-- green key description -->
+	<div id='btn_green' class='buttonDescription greenColor'>LOAD 5</div>
+
+	<!-- yellow key description -->
+	<div id='btn_yellow' class='buttonDescription yellowColor'>LOAD 10</div>
+
+	<!-- copyright -->
+	<div class='copyright'>Copyright LG Electronics</div>
+</div>
+
+</body>
+</html>

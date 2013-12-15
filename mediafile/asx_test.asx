@@ -1,0 +1,29 @@
+<ASX VERSION="3.0">
+
+  <TITLE>Example Show</TITLE>
+  <COPYRIGHT>Copyright00</COPYRIGHT>
+  <PARAM NAME="param00_name" VALUE="param00_value" />
+  <BASE HREF="http://10.177.45.26:8080/WebAPI_Tutorial/" /> 
+   
+  <ENTRY>
+    <TITLE>Example Clip 01</TITLE>
+    <REF HREF="mediafile/samplevideo.wmv" />
+    <COPYRIGHT>Copyright01</COPYRIGHT>
+    <PARAM NAME="param01_name" VALUE="param01_value" />
+  </ENTRY>
+
+  <ENTRY>
+    <TITLE>Example Clip 02</TITLE>
+    <REF HREF="mediafile/NetCastGeneratorClient.avi" />
+    <COPYRIGHT>Copyright02</COPYRIGHT>
+    <PARAM NAME="param02_name" VALUE="param02_value" />
+  </ENTRY>
+
+  <ENTRY>
+    <TITLE>Example Clip 03</TITLE>
+    <REF HREF="mediafile/timer.mp4" />
+    <COPYRIGHT>Copyright03</COPYRIGHT>
+    <PARAM NAME="param03_name" VALUE="param03_value" />
+  </ENTRY>
+   
+</ASX>

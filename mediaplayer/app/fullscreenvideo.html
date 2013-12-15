@@ -1,0 +1,163 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>Full Screen Video Test Page</title>
+<link rel="stylesheet" href="../../css/style.css">
+<script language="javascript" src="../../js/common.js"></script>
+<script language="javascript" src="../../js/keycode.js"></script>
+<script language="javascript" src="../../js/menu.js"></script>
+<script language="javascript" src="../../js/media.js"></script>
+
+<script type="text/javascript" src="../../blackbirdjs/blackbird.js"></script>
+<link type="text/css" rel="Stylesheet" href="../../blackbirdjs/blackbird.css" />
+<style type="text/css">
+	.OverLay { position: relative; z-index:10; opacity: 1; filter: alpha(opacity =100); }
+	body { height: 100%; }
+	html { height: 100%; }
+</style>
+<script>
+
+	//initialize page
+	function initPage()
+	{
+		//save page as last visited page
+		setLastVisitPage();
+
+		//common initialize function
+		commonInitialize();
+		requestSourceCode();		
+		setPageID("Full Screen");		
+		jsLog.initLG();
+		
+		//add onclick event handler
+		addEventHandler(document.getElementById("btn_back"), "click", onClickHandler);
+		addEventHandler(document.getElementById("btn_exit"), "click", onClickHandler);
+		addEventHandler(document.getElementById("btn_red"), "click", onClickHandler);
+		addEventHandler(document.getElementById("btn_green"), "click", onClickHandler);
+		addEventHandler(document.getElementById("btn_yellow"), "click", onClickHandler);
+		
+		jsLog.lgobject('application/x-netcast-av');
+	}
+	
+	function onUserInput(userInput)
+	{
+		switch(userInput)
+		{
+			case VK_BACK : window.location.replace("../menu_mediaPlayer.html"); break;
+			case VK_RED : case 82 : changeTestProgress(); break;
+			case VK_GREEN : window.NetCastLaunchQMENU();
+							jsLog.lgmethod('NetCastLaunchQMENU()'); break;
+			case VK_YELLOW : window.NetCastLaunchRATIO();
+							jsLog.lgmethod('NetCastLaunchRATIO()'); break;
+		}
+	}
+	function changeTestProgress()
+	{		
+		var video = document.getElementById("video");
+		var bodycontent = document.getElementById("bodycontent");
+		var sourcecode = document.getElementById("sourcecode");	
+		
+		video.play(1);
+		jsLog.lgmethod('video.play(1)');
+		video.style.visibility="visible";
+
+		bodycontent.style.visibility="hidden";
+		sourcecode.style.visibility = "hidden";
+		document.getElementById("btn_red").style.visibility="hidden";
+	}
+
+</script>
+</head>
+
+<body ondragstart='return false' onselectstart='return false' onload="javascript:initPage();">
+<div id='bodycontent'>
+	<div>
+		<object
+			id="video"
+			type="application/x-netcast-av"
+			width=1280
+			height=720		
+			style="float: left; z-index: 1; visibility: hidden;"
+			autoStart=false	
+			data="../../mediafile/NetCastGeneratorClient.avi">			
+		</object>	
+	</div>
+
+	<!-- title -->
+	<div class='SuiteTitle' >LG Smart TV SDK | Web Open API Tutorial</div>
+	
+	<!-- navigation -->
+	<div class='SuiteNavigation'>
+		<div style="float:left;">File : mediaplayer/app/fullscreenvideo.html</div>
+	</div>
+	
+	<div class='SuiteTitleLine'> </div>
+	
+	<!-- test contents -->
+	<div class='ContentArea'> 
+		<div class='ApiListTitleArea '>API List</div>
+		<div class='ApiListArea OverLay'>
+			<div class='MethodTitleArea'>
+				Methods
+				<div class='MethodListArea'>
+				play(1)
+				</div>
+			</div>
+			<div class='PropertyTitleArea'>
+				Properties
+				<div class='PropertyListArea'>
+				</div>
+			</div>
+			<div class='EventTitleArea'>
+				Events
+				<div class='EventListArea'>
+				
+				</div>
+			</div>
+		</div>
+	
+		<div class='ViewTitleArea'>
+			<div id='tabViewArea' class='SelectedViewArea' style='float:left;' onclick="showView();">View</div>
+			<div id='tabCodeArea' class='UnselectedViewArea' style='float:right;' onclick='showCode();'>Source</div>
+		</div>
+		
+		<div id='view'>	
+			<div class='ViewArea'>
+				<table width="100%" height="100%" cellpadding="0" cellspacing="0"><tr><td align="center" valign="middle">
+				<div class='centerTestGuide '>Check whether NetCast advertising video is being displayed in full screen.<br>Press RED-Key to start test.</div>
+				</td></tr></table>
+			</div>
+		</div>
+		
+		<div style="visibility: hidden" id='codeview'>
+			<textarea class="SourceCodeArea" value=""  id='sourcecode'></textarea>
+		</div>
+	</div>
+	
+</div>		
+		
+<!-- button and copyright -->	
+<div class='SuiteButtonArea '>
+	<!-- back key description -->
+	<div id='btn_back' class='buttonDescription'>BACK</div>
+	
+	<!-- exit key description -->	
+	<div id='btn_exit' class='buttonDescription'>EXIT</div>
+
+	<!-- red key description -->
+	<div id='btn_red' class='buttonDescription redColor'>START</div>
+	
+	<!-- green key description -->
+	<div id='btn_green' class='buttonDescription greenColor'>QMENU</div>
+	
+	<!-- yellow key description -->
+	<div id='btn_yellow' class='buttonDescription yellowColor'>RATIO</div>
+	
+	<!-- copyright -->
+	<div class='copyright '>Copyright LG Electronics</div>
+</div>
+
+</body>
+</html>
+

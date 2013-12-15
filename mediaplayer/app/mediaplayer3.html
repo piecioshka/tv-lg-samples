@@ -1,0 +1,219 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>Windows Media Player API Test Page(3/3)</title>
+<link rel="stylesheet" href="../../css/style.css">
+<script language="javascript" src="../../js/keycode.js"></script>
+<script language="javascript" src="../../js/common.js"></script>
+<script language="javascript" src="../../js/menu.js"></script>
+<script language="javascript" src="../../js/media.js"></script>
+
+<script type="text/javascript" src="../../blackbirdjs/blackbird.js"></script>
+<link type="text/css" rel="Stylesheet" href="../../blackbirdjs/blackbird.css" />
+
+
+<script>
+
+	//initialize page
+	function initPage()
+	{
+		//save page as last visited page
+		setLastVisitPage();
+
+		//common initialize function
+		commonInitialize();
+		requestSourceCode();
+		setPageID("Media Player");		
+ 		jsLog.initLG();
+ 		
+ 		//add onclick event handler
+		addEventHandler(document.getElementById("btn_back"), "click", onClickHandler);
+		addEventHandler(document.getElementById("btn_red"), "click", onClickHandler);
+		addEventHandler(document.getElementById("btn_green"), "click", onClickHandler);
+		addEventHandler(document.getElementById("btn_exit"), "click", onClickHandler);
+		
+		var video = document.getElementById("video");
+		
+		//add onError handler
+		video.onError = processError;
+		
+ 		jsLog.lgobject('application/x-netcast-av');
+	}
+	
+	//onUserInput function should be implemented
+	function onUserInput(userInput)
+	{
+		switch(userInput)
+		{
+			case VK_BACK : window.location.replace("../menu_mediaPlayer.html"); break;
+			case VK_RED : case 82 : setNextStep(); break;
+			case VK_GREEN : case 71 : window.location.replace("./mediaplayer2.html"); break;
+		}
+	}
+
+	var errorsToTest = new Array();
+
+	errorsToTest[errorsToTest.length] = [0, "A/V format not supported", getMediaFileUrl("samplevideo.flv")];
+	errorsToTest[errorsToTest.length] = [1, "Cannot connect to server or connection lost", "../../mediafile/NetCastGeneratorClient_H.264_MP3.mov"];
+	errorsToTest[errorsToTest.length] = [1000, "File is not found", getMediaFileUrl("not_exist.mp4")];
+	errorsToTest[errorsToTest.length] = [1001, "Invalid protocol", "xxxx" + getMediaFileUrl("timer.mp4").substring(4)];
+	errorsToTest[errorsToTest.length] = [1003, "Play list is empty", getMediaFileUrl("empty_list.asx")];
+	errorsToTest[errorsToTest.length] = [1004, "Unrecognized play list", getMediaFileUrl("pls_test.pls")];
+	errorsToTest[errorsToTest.length] = [1005, "Invalid ASX format", getMediaFileUrl("invalid_format.asx")];
+	
+	var currentStep = -1;
+	
+	function setNextStep()
+	{
+		currentStep++;
+		if(currentStep == 0)
+		{
+			setInnerTextById("error_test_description", "Check whether expected error is occurred.<br>Press Red-key to test next error code.");
+			setInnerTextById("btn_red", "NEXT");
+		}
+		
+		if(currentStep >= errorsToTest.length){return;}
+		
+ 		var media = document.getElementById("video");
+ 		media.stop();
+ 		jsLog.lgmethod('stop()');
+		setInnerTextById("error_code", errorsToTest[currentStep][0]);
+		setInnerTextById("error_desc", errorsToTest[currentStep][1]);
+		setInnerTextById("result_error_code", "");
+		document.getElementById("test_result").className = "";
+		setInnerTextById("test_result", "");
+
+		if(currentStep == (errorsToTest.length - 1))
+		{
+			setInnerTextById("error_test_description", "Check whether expected error is occurred.<br>No more test is left on this page.");
+			document.getElementById("btn_red").style.visibility = "hidden";
+		}
+
+		media.data = errorsToTest[currentStep][2];
+		jsLog.lgproperty('data');
+		
+		if(errorsToTest[currentStep][2] != "")
+		{
+			media.play();
+			jsLog.lgmethod('play()');
+		}
+	}
+
+	function processError()
+	{
+		jsLog.lgevent('onError');		
+		
+		if(currentStep < 0 || currentStep >= errorsToTest.length)
+			return;
+		
+		var errorCode = document.getElementById("video").error;
+		setInnerTextById("result_error_code", errorCode); 
+		jsLog.lgproperty('video.error');
+	}
+	
+</script>
+</head>
+
+
+<body ondragstart='return false' onselectstart='return false' onload="javascript:initPage();">
+
+<!-- title -->
+<div class='SuiteTitle' >LG Smart TV SDK | Web Open API Tutorial</div>
+
+<!-- navigation -->
+<div class='SuiteNavigation'>
+	<div style="float:left;">File : mediaplayer/app/mediaplayer3.html</div>
+</div>
+
+<div class='SuiteTitleLine'> </div>
+
+<!-- test contents -->
+<div class='ContentArea ' id="content_body">
+	<div class='ApiListTitleArea'>Web Open API List</div>
+	<div class='ApiListArea'>
+		<div class='MethodTitleArea'>
+			Methods
+			<div class='MethodListArea'>
+				stop()<br>
+				play()<br>
+			</div>
+		</div>
+		<div class='PropertyTitleArea'>
+			Properties
+			<div class='PropertyListArea'>
+				data<br>
+				error
+			</div>
+		</div>
+		<div class='EventTitleArea'>
+			Events
+			<div class='EventListArea'>
+				onError<br>
+			
+			</div>
+		</div>
+	</div>
+
+	<div class='ViewTitleArea'>
+		<div id='tabViewArea' class='SelectedViewArea' style='float:left;' onclick="showView();">View</div>
+		<div id='tabCodeArea' class='UnselectedViewArea' style='float:right;' onclick='showCode();'>Source</div>
+	</div>
+	
+	<div id='view'>
+		<div class='ViewArea'>
+			<object
+				id="video"
+				type="application/x-netcast-av"
+				width=300
+				height=250
+				data="../../mediafile/timer.mp4"
+				style="float: left";>
+			</object>
+			
+			<table id="temp_result" style="position: relative; left: 10px;	width:570px; height:250px;" border="0" cellpadding="0" cellspacing="0">
+				<tr height="80px">
+					<td width="40%"><div class="eachTestGuide ">Expected Error Code</div></td>
+					<td width="60%" colspan="2"><div class="eachTestGuide " id="error_code"></div></td>
+				</tr> 
+				<tr height="80px">
+					<td width="30%"><div class="eachTestGuide ">Error Description</div></td>
+					<td width="60%" colspan="2"><div class="eachTestGuide " id="error_desc"></div></td>
+				</tr>
+				<tr height="80px">
+					<td width="30%"><div class="eachTestGuide ">Result</div></td>
+					<td width="30%"><div class="eachTestGuide " id="result_error_code"></div></td>
+					<td width="40%"><div id="test_result" style="float:left;"></div></td>
+				</tr>
+			</table>
+		</div>
+	</div>
+			
+ 	<div style="visibility: hidden" id='codeview'>
+		<textarea class="SourceCodeArea" value=""  id='sourcecode'></textarea>
+	</div>
+</div>
+
+<!-- description -->
+<div class='SuiteDescriptionTwoLine ' id="error_test_description" style="position: absolute; left:-50px; top:600px">Press Red-key to test error code.</div>
+
+<!-- button and copyright -->	
+<div class='SuiteButtonArea'>
+	<!-- back key description -->
+	<div id='btn_back' class='buttonDescription '>BACK</div>
+	
+	<!-- exit key description -->	
+	<div id='btn_exit' class='buttonDescription'>EXIT</div>
+
+	<!-- red key description -->
+	<div id='btn_red' class='buttonDescription redColor'>TEST</div>
+
+	<!-- green key description -->
+	<div id='btn_green' class='buttonDescription greenColor'>PREVIOUS PAGE</div>
+
+	<!-- copyright -->
+	<div class='copyright '>Copyright LG Electronics</div>
+</div>
+
+</body>
+</html>

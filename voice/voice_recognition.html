@@ -1,0 +1,257 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=EUC-KR">
+<title>Voice recognition API Test</title>
+<link rel="stylesheet" href="../css/style.css">
+<script language="javascript" src="../js/common.js"></script>
+<script language="javascript" src="../js/keycode.js"></script>
+<script language="javascript" src="../js/menu.js"></script>
+
+<script type="text/javascript" src="../blackbirdjs/blackbird.js"></script>
+<link type="text/css" rel="Stylesheet" href="../blackbirdjs/blackbird.css" />
+
+<script>
+
+	//initialize page
+	function initPage()	
+	{
+		//save page as last visited page
+		setLastVisitPage();
+		
+		//common initialize function
+		commonInitialize();		
+		requestSourceCode();
+		jsLog.initLG();
+		
+		checkNetCastVersion();
+		
+		//add onclick event handler
+	 	addEventHandler(document.getElementById("btn_back"), "click", onClickHandler);
+		addEventHandler(document.getElementById("btn_exit"), "click", onClickHandler);
+		addEventHandler(document.getElementById("dictation_mode"), "click", onDictationModeHandler);
+		addEventHandler(document.getElementById("keyword_mode"), "click", onKeywordModeHandler);
+			
+		jsLog.lgobject('application/x-netcast-voice');	
+		initVoice();
+		showPropResult();		
+	}
+	
+	function showPropResult(){
+		var msgArea = document.getElementById('displayArea');
+		var htmlStr="";
+		htmlStr+=(voice.isInitialized!=undefined) ? "<font style='color:#000000; font-weight:bold'>voice.isInitialized:</font> "+voice.isInitialized : "";
+		jsLog.lgproperty('isInitialized');
+		htmlStr+=(voice.isEnable!=undefined)? "<br><font style='color:#000000; font-weight:bold'>voice.isEnable:</font> "+voice.isEnable : "";
+		jsLog.lgproperty('isEnable');
+		htmlStr+=(voice.dictation!=undefined)? "<br><font style='color:#000000; font-weight:bold'>voice.dictation:</font> "+voice.dictation : "";
+		jsLog.lgproperty('dictation');
+		msgArea.innerHTML =htmlStr;
+	}
+	
+	//onUserInput function should be implemented
+	function onUserInput(userInput)
+	{
+		switch(userInput)
+		{
+			case VK_BACK : 
+				window.location.replace("../main_menu.html"); 
+				break;
+		}
+	}
+	
+	function initVoice()
+	{
+		var device = document.getElementById("device");
+		var voice = document.getElementById('voice');		
+		
+		if(!(device.supportVoiceRecog || voice.isInitialized || voice.isEnable))
+		{
+			//alert("em");
+			document.getElementById("start_Recording").className="executeBigButtonOff";
+		}
+		else
+		{
+			addEventHandler(document.getElementById("start_Recording"), "click", voiceHandler);
+		}
+		
+		voice.onrecognizevoice = recognizeVoiceHandler;
+		voice.onbuttonenable = buttonStateHandler;
+	}
+	
+	function voiceHandler()
+	{
+		var voice = document.getElementById('voice');
+		
+		if(voice.isEnable == true)
+		{
+			voice.startRecognition();
+			jsLog.lgmethod('startRecognition()');
+		}
+	}
+	
+	function recognizeVoiceHandler(e)
+	{
+		console.log(">O< recognizeVoiceHandler is called.");
+		if(e)
+		{
+			result = e;
+			jsLog.lgevent('recognizeVoiceHandler : '+'result = '+ result);
+		}
+		else
+		{
+			jsLog.lgevent('recognizeVoiceHandler : '+' No Event');
+		}		
+	}
+	
+	function buttonStateHandler(e)
+	{		
+		if(e)
+		{
+			if(e == true)
+			{ 
+				console.log(">O< buttonStateHandler is called");
+				document.getElementById("start_Recording").className="executeBigButton";
+				addEventHandler(document.getElementById("start_Recording"), "click", voiceHandler);
+				jsLog.lgevent('buttonStateHandler : '+' true');
+			}
+			else
+			{
+				document.getElementById("start_Recording").className="executeBigButtonOff";
+				removeEventHandler(document.getElementById("start_Recording"), "click", voiceHandler);
+				jsLog.lgevent('buttonStateHandler : '+' false');
+			}
+		}
+	}
+
+	function onDictationModeHandler()
+	{
+		var voice = document.getElementById('voice');
+		voice.dictation = "on";
+		showPropResult()
+		jsLog.lgproperty('dictation');
+	}
+	
+	function onKeywordModeHandler()
+	{
+		var voice = document.getElementById('voice');
+		voice.dictation = "off";
+		showPropResult()
+		jsLog.lgproperty('dictation');
+	}
+	
+	function checkNetCastVersion()
+	{
+		var nBrowserVersion = getBrowserVersion();
+		
+		if(nBrowserVersion == 4) // NetCast 2.0
+		{
+			document.getElementById('dictation_mode').style.visibility = "hidden";
+			document.getElementById('keyword_mode').style.visibility = "hidden";			
+			document.getElementById('start_Recording').style.visibility = "hidden";			
+		}
+		else if(nBrowserVersion >= 5) // NetCast 3.0
+		{
+
+			setInnerTextById("APIdescription", "The voice recognition plugin and API are supported on NetCast 3.0 1st SU or later.");
+			setInnerTextById("method","startRecognition()");
+            setInnerTextById("property","isInitialized<br> isEnabled<br>dictation");
+            setInnerTextById("events","onrecognizevoice<br>onbuttonenable");
+		}
+	}
+
+</script>
+</head>
+
+<body ondragstart='return false' onselectstart='return false' onload="javascript:initPage();">	
+	
+<!-- title -->
+<div class='SuiteTitle' >LG Smart TV SDK | Web Open API Tutorial</div>
+
+<!-- navigation -->
+<div class='SuiteNavigation'>
+	<div style="float:left;">File : voice/voice_recognition.html</div>
+</div>
+
+<div class='SuiteTitleLine'> </div>
+
+<!-- test contents -->
+<div id='content_body' class='ContentArea'>
+
+  	<div class='ApiListTitleArea'>API List</div>
+	<div class='ApiListArea'>
+		<div class='MethodTitleArea'>
+			Methods
+			<div class='MethodListArea' id="method"></div>
+		</div>
+		<div class='PropertyTitleArea'> Properties
+	    	<div class='PropertyListArea' id="property"> </div>
+	    </div>
+	    <div class='EventTitleArea'> Events
+	    	<div class='EventListArea'  id="events"> </div>
+	    </div>
+	</div>
+	
+	<div class='ViewTitleArea'>
+		<div id='tabViewArea' class='SelectedViewArea' style='float:left;' onclick="showView();">View</div>
+		<div id='tabCodeArea' class='UnselectedViewArea' style='float:right;' onclick='showCode();'>Source</div>
+	</div>
+	
+	<div id='view'>
+	  <div class='ViewArea'>
+		<object	
+            	id="voice"
+            	type="application/x-netcast-voice"
+                width="0"
+				height="0"
+				style="float: left"
+            >
+        </object>
+        <object	
+            	id="device"
+            	type="application/x-netcast-info"
+                width="0"
+				height="0"
+				style="float: left"
+            >
+        </object>	
+		<table >
+			<tr ><td width="350"><div id="dictation_mode" class="executeBigButton" >Enable Dictation mode</div></td>
+            <td rowspan="3"><div id="displayArea" class="displayAreaStyle">Hi this is the area for the item</div></td>
+            </tr>
+			<tr ><td><div id="keyword_mode" class="executeBigButton">Enable Keyword mode</div></td>
+		    </tr>
+			<tr ><td><div id="start_Recording" class="executeBigButton">Start Voice Recording</div></td>
+		    </tr>
+			
+			<tr height="50px">
+				<td colspan="2" align=left><div id="APIdescription" ></div></td>
+			</tr>
+		</table>
+		
+		</div>
+	</div>	
+	
+	<div style="visibility: hidden" id='codeview'>
+		<textarea class="SourceCodeArea" value=""  id='sourcecode'></textarea>
+	</div>
+	 
+</div>
+
+
+<!-- button and copyright -->	
+<div class='SuiteButtonArea'>
+
+	<!-- button -->	
+	<div id='btn_back' class='buttonDescription'>BACK</div>
+
+	<!-- exit key description -->	
+	<div id='btn_exit' class='buttonDescription'>EXIT</div>
+	
+	<!-- copyright -->
+	<div class='copyright'>Copyright LG Electronics</div>
+</div>
+
+</body>
+</html>
+	

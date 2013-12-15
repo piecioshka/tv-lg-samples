@@ -1,0 +1,274 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>CE-HTML API Test Page</title>
+<link rel="stylesheet" href="../../css/style.css">
+<script language="javascript" src="../../js/common.js"></script>
+<script language="javascript" src="../../js/keycode.js"></script>
+<script language="javascript" src="../../js/media.js"></script>
+<script language="javascript" src="../../js/menu.js"></script>
+
+<script type="text/javascript" src="../../blackbirdjs/blackbird.js"></script>
+<link type="text/css" rel="Stylesheet" href="../../blackbirdjs/blackbird.css" />
+
+<script>
+
+	//initialize page
+	function initPage()
+	{
+		//save page as last visited page
+		setLastVisitPage();
+
+		//common initialize function
+		commonInitialize();
+		requestSourceCode();
+		setPageID("CE-HTML");		
+		jsLog.initLG();
+		
+		//add onclick event handler
+		addEventHandler(document.getElementById("btn_back"), "click", onClickHandler);
+		addEventHandler(document.getElementById("btn_red"), "click", onClickHandler);
+		addEventHandler(document.getElementById("btn_exit"), "click", onClickHandler);
+	
+		jsLog.lgobject('video/mp4');
+	}
+	
+	//onUserInput function should be implemented
+	function onUserInput(userInput)
+	{
+		switch(userInput)
+		{
+			case VK_BACK : window.location.replace("../menu_mediaPlayer.html"); break;
+			case VK_RED : case 82 : processRedKey(); break;
+	 	}
+	}
+	
+	var testProcess = 1;
+	function processRedKey()
+	{
+		var video = document.getElementById("video");
+		
+		switch(testProcess)
+		{
+			case 1 :
+				video.play(); jsLog.lgmethod('video.play()');
+				setVideoStatus();
+				setInnerTextById("ce_html_test_guide", "Check whether video is being played and playState is 4(buffering).<br>Press RED-key to pause video.");
+				setInnerTextById("btn_red", "PAUSE");
+				break;
+				
+			case 2 :
+				setInterval(setVideoStatus, 4000);
+				video.pause(); jsLog.lgmethod('video.pause()');
+				setInnerTextById("ce_html_test_guide", "Check whether video is paused and status is correct.<br>Press RED-key to play video.");
+				setInnerTextById("btn_red", "PLAY");
+				break;
+				
+			case 3 :
+				video.play(); jsLog.lgmethod('video.play()');
+				setInnerTextById("ce_html_test_guide", "Check whether video is being played and status is correct.<br>Press RED-key to seek to 90sec position.");
+				setInnerTextById("btn_red", "SEEK");
+				break;
+				
+			case 4 :
+				video.seek(90 * 1000); jsLog.lgmethod('video.seek(time)');
+				setInnerTextById("ce_html_test_guide", "Check whether play position is correct(90000ms).<br>Press RED-key to stop video.");
+				setInnerTextById("btn_red", "STOP");
+				break;
+				
+			case 5 :
+				video.stop(); jsLog.lgmethod('video.stop()');
+				setInnerTextById("ce_html_test_guide", "Check whether video is stopped and status is correct.<br>Press RED-key to play video.");
+				setInnerTextById("btn_red", "PLAY");
+				break;
+			
+			case 6 : 
+				video.play(); jsLog.lgmethod('video.play()');
+				setInnerTextById("ce_html_test_guide", "Check whether video is being played and status is correct.<br>Press RED-key to move video to top-left corner.");
+				setInnerTextById("btn_red", "MOVE");
+				break;
+				
+			case 7 :
+				video.style.position="relative";
+				video.style.top="100px";
+				video.style.left="0px";
+				setInnerTextById("ce_html_test_guide", "Check whether video is moved to top-left corner.<br>Press RED-key to move video to bottom-right corner.");
+				setInnerTextById("btn_red", "MOVE");
+				break;
+				
+			case 8 :
+				video.style.position="relative";
+				video.style.top="0px";
+				video.style.left="600px";
+				setInnerTextById("ce_html_test_guide", "Check whether video is moved to bottom-right corner.<br>Press RED-key to turn video into large screen.");
+				setInnerTextById("btn_red", "FULL SCREEN");
+				break;
+				
+			case 9 :
+				var table = document.getElementById("table");
+				table.style.color="white";
+				video.style.top="0px";
+				video.style.left="0px";
+				video.width = "900px";
+				video.height = "350px";
+				jsLog.lgproperty('width');
+				jsLog.lgproperty('height');
+				setInnerTextById("ce_html_test_guide", "Check whether video is being played in full screen.<br>Press RED-key to seek to end of video.");
+				setInnerTextById("btn_red", "SEEK");
+				break;
+				
+			case 10 :
+				var table = document.getElementById("table");
+				table.style.color="black";
+				video.style.top="0px";
+				video.style.left="0px";
+				video.width = "300px";
+				video.height = "250px";
+				video.seek(video.playTime); jsLog.lgmethod('video.seek(time)');
+				setInnerTextById("ce_html_test_guide", "Check whether playState is 5(finished).<br>No more test is left on this page.");
+				document.getElementById("btn_red").style.visibility = "hidden";
+				setInnerTextById("btn_red", "");
+				break;
+		}
+		testProcess++;
+	}
+	
+	function setVideoStatus()
+	{
+		var video = document.getElementById("video");
+		setInnerTextById("playTime_value", "playTime : " + video.playTime + "ms"); jsLog.lgproperty('playTime');
+		setInnerTextById("playPosition_value", "playPosition : " + video.playPosition + "ms"); jsLog.lgproperty('playPosition');
+		var playStateExplain = "";
+		var playState = video.playState;
+		if(playState == 0){playStateExplain = "stopped";}
+		else if(playState == 1){playStateExplain = "playing";}
+		else if(playState == 2){playStateExplain = "paused";}
+		else if(playState == 3){playStateExplain = "connecting";}
+		else if(playState == 4){playStateExplain = "buffering";}
+		else if(playState == 5){playStateExplain = "finished";}
+		else if(playState == 6){playStateExplain = "error";}
+		setInnerTextById("playState_value", "playState : " + playState + " (" + playStateExplain + ")");
+		setInnerTextById("speed_value", "speed : " + video.speed + "x"); jsLog.lgproperty('speed');
+		setInnerTextById("error_value", "getResponseFailMsg : " + video.getResponseFailMsg());
+		setInnerTextById("clock_status_value", "getClockStatus : " + video.getClockStatus());
+	}
+
+
+</script>
+</head>
+
+<body ondragstart='return false' onselectstart='return false' onload="javascript:initPage();">
+	<!-- title -->
+	<div class='SuiteTitle' >LG Smart TV SDK | Web Open API Tutorial</div>
+	
+	<!-- navigation -->
+	<div class='SuiteNavigation'>
+		<div style="float:left;">File : mediaplayer/app/cehtml.html</div>
+	</div>
+	
+	<div class='SuiteTitleLine'> </div>
+	
+	<!-- test contents -->
+	<div class='ContentArea'>
+		<div class='ApiListTitleArea'>Web Open API List</div>
+		<div class='ApiListArea'>
+			<div class='MethodTitleArea'>
+				Methods
+				<div class='MethodListArea'>
+					play()<br>
+					stop()<br>
+					pause()<br>
+					seek(time)<br> 
+				</div>
+			</div>
+			<div class='PropertyTitleArea'>
+				Properties
+				<div class='PropertyListArea'>
+					playState<br>
+					speed<br>
+					playPosition<br>
+					width<br>
+					height<br>
+				</div>
+			</div>
+			<div class='EventTitleArea'>
+				Events
+				<div class='EventListArea'>
+				
+				</div>
+			</div>
+		</div>
+
+		<div class='ViewTitleArea'>
+			<div id='tabViewArea' class='SelectedViewArea' style='float:left;' onclick="showView();">View</div>
+			<div id='tabCodeArea' class='UnselectedViewArea' style='float:right;' onclick='showCode();'>Source</div>
+		</div>
+		
+		<div id='view'>
+			<div class='ViewArea'>
+			<div>
+				<object
+					id="video"
+					type="video/mp4"
+					width=300
+					height=250		
+					autoStart="false"
+					data="../../mediafile/timer.mp4"
+					style="float: left;">			
+				</object>
+			</div>	
+			
+			<table width="600px" border="0" cellpadding="0" cellspacing="0" id="table">
+				<tr height="35px">
+					<td width="600px" align="left" colspan="2"><div class="centerTestGuide">Video Status</div></td>
+				</tr>
+				<tr height="35px">
+					<td width="600px"><div class="eachTestGuide" id="playTime_value">playTime :</div></td>
+				</tr>
+				<tr height="35px">
+					<td width="600px"><div class="eachTestGuide" id="playPosition_value">playPosition :</div></td>
+				</tr>
+				<tr height="35px">
+					<td width="600px"><div class="eachTestGuide" id="playState_value">playState :</div></td>
+				</tr>
+				<tr height="35px">	
+					<td width="600px"><div class="eachTestGuide" id="speed_value">speed :</div></td>
+				</tr>
+				<tr height="35px">
+					<td width="600px"><div class="eachTestGuide" id="error_value">getResponseFailMsg :</div></td>
+				</tr>
+				<tr height="35px">	
+					<td width="600px"><div class="eachTestGuide" id="clock_status_value">getClockStatus :</div></td>
+				</tr>
+				<tr height="70px">
+					<td width="600px" align="center" valign="middle" style="font-size: 20px"><div class="eachTestGuide" id="ce_html_test_guide">Press RED-Key to play video.</div></td>
+				</tr>
+			</table>
+			</div>
+		</div>
+		
+		<div style="visibility: hidden" id='codeview'>
+			<textarea class="SourceCodeArea" value=""  id='sourcecode'></textarea>
+		</div>
+		
+	</div>
+
+
+<!-- button and copyright -->	
+<div class='SuiteButtonArea'>
+	<!-- back key description -->
+	<div id='btn_back' class='buttonDescription'>BACK</div>
+
+	<!-- exit key description -->	
+	<div id='btn_exit' class='buttonDescription'>EXIT</div>
+
+	<!-- red key description -->
+	<div id='btn_red' class='buttonDescription redColor'>PLAY</div>
+	
+	<!-- copyright -->
+	<div class='copyright'>Copyright LG Electronics</div>
+</div>
+
+</body>
+</html>

@@ -1,0 +1,207 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>Multi Audio Test Page</title>
+<link rel="stylesheet" href="../../css/style.css">
+<script language="javascript" src="../../js/common.js"></script>
+<script language="javascript" src="../../js/keycode.js"></script>
+<script language="javascript" src="../../js/media.js"></script>
+<script language="javascript" src="../../js/menu.js"></script>
+
+<script type="text/javascript" src="../../blackbirdjs/blackbird.js"></script>
+<link type="text/css" rel="Stylesheet" href="../../blackbirdjs/blackbird.css" />
+
+<script>
+
+	//initialize page
+	function initPage()
+	{
+		//save page as last visited page
+		setLastVisitPage();
+
+		//common initialize function
+		commonInitialize();
+		requestSourceCode();
+		setPageID("Multi Audio");	
+		jsLog.initLG();
+		
+		//add onclick event handler
+		addEventHandler(document.getElementById("btn_back"), "click", onClickHandler);
+		addEventHandler(document.getElementById("btn_red"), "click", onClickHandler);
+		addEventHandler(document.getElementById("btn_green"), "click", onClickHandler);
+		addEventHandler(document.getElementById("btn_yellow"), "click", onClickHandler);
+		addEventHandler(document.getElementById("btn_exit"), "click", onClickHandler);
+
+		checkInitStatus();
+	 
+		jsLog.lgobject('application/x-netcast-av');
+
+	}
+	
+	function onUserInput(userInput)
+	{
+		switch(userInput)
+		{
+			case VK_BACK : window.location.replace("../menu_mediaPlayer.html"); break;
+			case VK_RED : toggleAudioLanguage(); break;
+			case VK_GREEN : movePosition(-60); break;
+			case VK_YELLOW : movePosition(60); break;
+		}
+	}
+	
+	//check until playstate become 1(playing) to set initial "audioLanguage"
+	function checkInitStatus()
+	{
+		var videoObj = document.getElementById("video");
+		
+		if(videoObj.playState == 1)
+		{
+			jsLog.lgproperty('playState :' + videoObj.playState);	
+			
+			toggleAudioLanguage();
+		}
+		else{setTimeout(checkInitStatus, 1);}
+	}
+
+	//toggle "audioLanguage" among supportLanguage
+	var curLangIdx = -1;
+	var supportLanguage = ["en", "fr"];
+	
+	function toggleAudioLanguage()
+	{
+		curLangIdx++;
+		if(curLangIdx >= supportLanguage.length){curLangIdx = 0;}
+		var nextlangIdx = curLangIdx + 1;
+		if(nextlangIdx >= supportLanguage.length){nextlangIdx = 0;}
+		document.getElementById("video").audioLanguage = supportLanguage[curLangIdx];
+		var guideStrToSet = "";
+
+	 	guideStrToSet += 'Current "audioLanguage" is "' + supportLanguage[curLangIdx] + '".<br>';
+		guideStrToSet += 'Check whether audio track is in "' + supportLanguage[curLangIdx] + '".';
+		
+		setInnerText(document.getElementById("multiAudioTestGuide"), guideStrToSet);
+	}
+	
+	//move position
+	function movePosition(secToMove)
+	{
+		var videoObj = document.getElementById("video");
+		var totalPlayTime = videoObj.playTime;
+		jsLog.lgproperty('playTime :' + totalPlayTime);
+		
+		var positionToSet = videoObj.playPosition + (secToMove * 1000);
+		jsLog.lgproperty('playPosition :' + videoObj.playPosition);
+		
+		if(positionToSet < 0 ){positionToSet = 0;}
+		if(positionToSet > totalPlayTime){positionToSet = totalPlayTime;}
+		
+		video.seek(positionToSet);
+		jsLog.lgmethod('seek(time)');
+	}
+	
+</script>
+</head>
+
+
+<body ondragstart='return false' onselectstart='return false' onload="javascript:initPage();">	
+	
+<!-- title -->
+<div class='SuiteTitle' >LG Smart TV SDK | Web Open API Tutorial</div>
+
+<!-- navigation -->
+<div class='SuiteNavigation'>
+	<div style="float:left;">File : mediaplayer/app/multiaudio.html</div>
+</div>
+
+<div class='SuiteTitleLine'> </div>
+
+<!-- test contents -->
+<div id='content_body' class='ContentArea'>
+	<div class='ApiListTitleArea'>Web Open API List</div>
+	<div class='ApiListArea'>
+		<div class='MethodTitleArea'>
+			Methods
+			<div class='MethodListArea'>
+				seek(time)<br>
+			</div>
+		</div>
+		<div class='PropertyTitleArea'>
+			Properties
+			<div class='PropertyListArea'>
+				playTime<br>
+				playPosition<br>
+				playState<br>
+			</div>
+		</div>
+		<div class='EventTitleArea'>
+			Events
+			<div class='EventListArea'>
+			</div>
+		</div>
+	</div>
+
+	<div class='ViewTitleArea'>
+		<div id='tabViewArea' class='SelectedViewArea' style='float:left;' onclick="showView();">View</div>
+		<div id='tabCodeArea' class='UnselectedViewArea' style='float:right;' onclick='showCode();'>Source</div>
+	</div>
+	
+	<div id = 'view'>
+		<div class='ViewArea'>
+			<object
+				id="video"
+				type="application/x-netcast-av"
+				width=300
+				height=250
+				data="../../mediafile/multi_audio2.wmv"
+				style="float: left">
+			</object>	
+			
+			<table border="0" cellpadding="0" cellspacing="0" style="position: relative; left: 10px; width:600px; height:150px;">
+				<tr height="10%" >
+					<td ><div class="centerTestGuide ">Press Green-key to move 60 sec backward.</div></td>
+				</tr> 
+				<tr height=10%>
+					<td ><div class="centerTestGuide ">Press Yellow-key to move 60 sec forward.</div></td>
+				</tr>
+				<tr height=10%>
+					<td ><div class="centerTestGuide ">Press Red-key to change "audioLanguage".</div></td>
+				</tr>
+				<tr height=10%>
+					<td ><div class="centerTestGuide "></div></td>
+				</tr>
+				<tr height="10%">
+					<td align="center" valign="middle"> <div class="centerTestGuide " id="multiAudioTestGuide"></div></td>
+				</tr>
+			</table>
+		</div>
+	</div>
+	<div style="visibility: hidden" id='codeview'>
+		<textarea class="SourceCodeArea" value=""  id='sourcecode'></textarea>
+	</div>
+</div>
+
+<!-- button and copyright -->	
+<div class='SuiteButtonArea'>
+	<!-- back key description -->
+	<div id='btn_back' class='buttonDescription '>BACK</div>
+	
+	<!-- exit key description -->	
+	<div id='btn_exit' class='buttonDescription'>EXIT</div>
+
+	<!-- red key description -->
+	<div id='btn_red' class='buttonDescription redColor'>CHANGE</div>
+	
+	<!-- green key description -->
+	<div id='btn_green' class='buttonDescription greenColor'>MOVE -60 sec</div>
+	
+	<!-- yellow key description -->
+	<div id='btn_yellow' class='buttonDescription yellowColor'>MOVE +60 sec</div>
+
+	<!-- copyright -->
+	<div class='copyright '>Copyright LG Electronics</div>
+</div>
+
+</body>
+</html>
+

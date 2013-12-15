@@ -1,0 +1,98 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>NetCast Menu of API Unit Sample App</title>
+<link rel="stylesheet" href="../css/style.css">
+<script language="javascript" src="../js/keycode.js"></script>
+<script language="javascript" src="../js/common.js"></script>
+<script language="javascript" src="../js/menu.js"></script>
+<script>
+
+	//initialize page
+	function initPage()
+	{
+		commonInitialize();
+		//set pageID. pageID is used to save lastest executed menu as a cookie
+		setPageID("NetCast Menu");
+		
+		//add onclick event handler
+		addEventHandler(document.getElementById("btn_back"), "click", onClickHandler);
+		addEventHandler(document.getElementById("btn_exit"), "click", onClickHandler);		
+        
+		var strNotification = "AD APIs are only supported on Emulator, will not work on TV.";
+				
+		addMenu("BannerAd", "./app/bannerAd.html");
+		addMenu("VideoAd (HTML 5 Video Tag)", "./app/videoAd.html");
+		addMenu("VideoAdMediaPlugin (Media Plugin)", "./app/videoAdMediaPlugin.html");
+		
+		drawMenu();	
+		showPopupNotification(strNotification);
+	}
+	
+	
+	//onUserInput function should be implemented
+	function onUserInput(userInput)
+	{
+		switch(userInput)
+		{
+			case VK_BACK :
+				window.location.replace("../main_menu.html");
+				break;
+		}
+	}
+	function showPopupNotification(strNotification)
+	{
+		var notificationOverlay = document.createElement("div");
+		notificationOverlay.className = "notificationOverlay";
+		notificationOverlay.id = "notificationOverlay";		
+		document.body.appendChild(notificationOverlay);
+		
+		var popupNotification = document.createElement("div");
+		popupNotification.className = "popupNotification";
+		popupNotification.id = "popupNotification";
+		
+		document.body.appendChild(popupNotification);
+		setInnerTextById(popupNotification.id,strNotification);
+		popupNotification.innerHTML += '<br><br><input type="button" class="normalButton" height="30px" width="60px" onclick="closePopupNotification();" value="OK">';
+		
+		popupNotification.style.top = Math.round(window.innerHeight - popupNotification.offsetHeight)/2 + "px";
+		popupNotification.style.left = Math.round(window.innerWidth - popupNotification.offsetWidth)/2 + "px";
+	}
+	
+	function closePopupNotification()
+	{
+		var popupNotification = document.getElementById("popupNotification");
+		var notificationOverlay = document.getElementById("notificationOverlay");
+		document.body.removeChild(notificationOverlay);
+		document.body.removeChild(popupNotification);
+	}
+</script>
+</head>
+
+<body ondragstart='return false' onselectstart='return false' onload="javascript:initPage();">
+	
+<!-- title -->
+<div class='SuiteTitle' >LG Smart TV SDK | Web Open API Tutorial</div>
+
+<!-- navigation -->
+<div class='SuiteNavigation'>
+	<div style="float:left;">File : advertisement/menu_advertisement.html</div>
+</div>
+
+<div class='SuiteTitleLine'> </div>
+
+<!-- button and copyright -->	
+<div class='SuiteButtonArea'>
+	<!-- button -->	
+	<div id='btn_back' class='buttonDescription '>BACK</div>
+	
+	<!-- exit key description -->	
+	<div id='btn_exit' class='buttonDescription'>EXIT</div>
+
+	<!-- copyright -->
+	<div class='copyright'>Copyright LG Electronics</div>
+</div>
+
+</body>
+</html>

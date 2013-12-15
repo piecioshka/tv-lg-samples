@@ -1,0 +1,175 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>App Template of API Unit Sample App</title>
+<link rel="stylesheet" href="../../css/style.css">
+<script language="javascript" src="../../js/keycode.js"></script>
+<script language="javascript" src="../../js/common.js"></script>
+<script language="javascript" src="../../js/menu.js"></script>
+
+<script type="text/javascript" src="../../blackbirdjs/blackbird.js"></script>
+<link type="text/css" rel="Stylesheet" href="../../blackbirdjs/blackbird.css" />
+
+<script>
+
+
+	//initialize page
+	function initPage()
+	{
+		//save as last visited page
+		setLastVisitPage();
+
+		//common initialize function
+		commonInitialize();
+		requestSourceCode();
+		setPageID("Back, Exit"); 
+		jsLog.initLG(); 
+	
+	 	//add onclick event handler
+		addEventHandler(document.getElementById("btn_back"), "click", onClickHandler);
+		addEventHandler(document.getElementById("btn_red"), "click", onClickHandler);
+		addEventHandler(document.getElementById("btn_green"), "click", onClickHandler);
+		addEventHandler(document.getElementById("btn_exit"), "click", onClickHandler);
+
+		if(readCookie("back_exit_test_status") != "")
+		{	//clear back_exit_test_status cookie if it have been set
+			deleteCookie("back_exit_test_status", "/");
+		}
+		
+	}
+	
+	
+	function onUserInput(userInput)
+	{
+		switch(userInput)
+		{
+			case VK_BACK : window.location.replace("../menu_netcast.html"); break;
+			case VK_RED : case 82 : processRedKey(); break;
+			case VK_GREEN : case 71 : processGreenKey(); break;
+		}
+	}
+	
+
+	function processRedKey()
+	{
+		if(isThisLGEBrowser())
+		{
+			var userAgentString = new String(navigator.userAgent);
+			var BrowserVer = userAgentString.substring(userAgentString.search(/LG Browser/) + 11);
+			BrowserVer = BrowserVer.split("(", 1);
+			if(BrowserVer >= "3.0.23")
+			{
+			 //set cookie which will be checked at main_menu.html
+				writeCookie("back_exit_test_status", "under_testing", "/", 1 * 24 * 60 * 60 * 1000);
+				jsLog.lgmethod('window.NetCastBack()');
+				window.NetCastBack();
+			}
+			else
+				setInnerTextById("description", "Need Version over 3.0.23");
+		}
+		else
+			setInnerTextById("description", "This is not a LG Browser");
+	}
+	
+	function processGreenKey()
+	{
+		if(isThisLGEBrowser())
+		{
+			jsLog.lgmethod('window.NetCastExit()');
+			window.NetCastExit();		
+		}
+		else
+			setInnerTextById("description", "This is not a LG Browser");
+	}
+		
+</script>
+</head>
+
+<body ondragstart='return false' onselectstart='return false' onload="javascript:initPage();">
+
+<!-- title -->
+<div class='SuiteTitle'>LG Smart TV SDK | Web Open API Tutorial</div>
+
+<!-- navigation -->																					 
+<div class='SuiteNavigation'>																	 
+	<div style="float:left;">File : netcast/app/backexit.html</div>		
+</div>	
+																							
+<div class='SuiteTitleLine'> </div>	
+	 
+<!-- test contents -->																				
+<div id='content_body' class='ContentArea'>														 
+	<div class='ApiListTitleArea'>Web Open API List</div>													
+	<div class='ApiListArea'>																		 
+		<div class='MethodTitleArea'>																 
+			Methods																						 
+			<div class='MethodListArea'>
+			window.NetCastBack()<br>
+			window.NetCastExit()																	
+			</div>																							
+		</div>																							
+		<div class='PropertyTitleArea'>																 
+			Properties																						
+			<div class='PropertyListArea'>																
+																											
+			</div>																							
+		</div>																							
+		<div class='EventTitleArea'>																	
+			Events																							
+			<div class='EventListArea'>																 																					 
+																							 
+			</div>																							
+		</div>																							
+	</div>
+
+	<div class='ViewTitleArea'>
+		<div id='tabViewArea' class='SelectedViewArea' style='float:left;' onclick="showView();">View</div>
+		<div id='tabCodeArea' class='UnselectedViewArea' style='float:right;' onclick='showCode();'>Source</div>
+	</div>
+																																							
+	<div id='view' class='ViewArea'>																			
+		<table border="0" cellpadding="0" cellspacing="0">												
+			<tr height="50px">																				
+				<td align=left colspan="2"><div>1. Press Red-key to test NetCastBack()</div></td>									 
+			</tr>	
+			<tr height="50px">																				
+				<td align=left colspan="2"><div>2. Press Green-key to test NetCastExit()</div></td>									 
+			</tr>
+			<tr>
+				<td><div class='centerTestGuide' id='description'></div></td>
+			</tr>																																							 
+		</table>
+																								
+	</div> 
+	
+	<div style="visibility: hidden" id='codeview'>
+		<textarea class="SourceCodeArea" value=""  id='sourcecode'></textarea>
+	</div>		
+																								 
+</div>
+
+
+<!-- description -->	
+<div class='SuiteDescription' id='back_exit_test_description'></div>
+
+<!-- button and copyright -->	
+<div class='SuiteButtonArea'>
+	<!-- back key description -->
+	<div id='btn_back' class='buttonDescription'>BACK</div>
+
+	<!-- exit button -->	
+	<div id='btn_exit' class='buttonDescription'>EXIT</div>
+
+	<!-- red key description -->
+	<div id='btn_red' class='buttonDescription redColor'>BACK</div>
+
+	<!-- green key description -->
+	<div id='btn_green' class='buttonDescription greenColor'>EXIT</div>
+
+	<!-- copyright -->
+	<div class='copyright'>Copyright LG Electronics</div>
+</div>
+
+</body>
+</html>

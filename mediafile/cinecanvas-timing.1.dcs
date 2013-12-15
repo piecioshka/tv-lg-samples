@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<DCSubtitle Version="1.0">
+  <SubtitleID>1469D9D1-685D-4B86-9CDF-A51041D5AE9A</SubtitleID>
+  <MovieTitle>&#60;Not specified&#62;</MovieTitle>
+  <ReelNumber>1</ReelNumber>
+  <Language>English</Language>
+  <Font Italic="no" Size="20">
+    <Subtitle SpotNumber="1" TimeIn="00:00:00:225" TimeOut="00:00:04:225" FadeUpTime="20" FadeDownTime="20">
+		<Text Direction="horizontal" HAlign="center" HPosition="0.0" VAlign="bottom" VPosition="14.0">Subtitle : Cine Canvas Testing <br> <br> </Text>
+    </Subtitle>
+    <Subtitle SpotNumber="2" TimeIn="00:00:05:225" TimeOut="00:00:10:225" FadeUpTime="20" FadeDownTime="20">
+		<Text Direction="horizontal" HAlign="center" HPosition="0.0" VAlign="bottom" VPosition="14.0">[cinecanvas] 10:00:00:00:00 <br> <br> <br> </Text>
+    </Subtitle>
+    <Subtitle SpotNumber="3" TimeIn="00:00:15:225" TimeOut="00:00:20:225" FadeUpTime="20" FadeDownTime="20">
+		<Text Direction="horizontal" HAlign="center" HPosition="0.0" VAlign="bottom" VPosition="14.0">[cinecanvas] 10:00:10:00:00 <br> <br> <br> </Text>
+    </Subtitle>
+    <Subtitle SpotNumber="4" TimeIn="00:00:25:225" TimeOut="00:00:30:225" FadeUpTime="20" FadeDownTime="20">
+		<Text Direction="horizontal" HAlign="center" HPosition="0.0" VAlign="bottom" VPosition="14.0">[cinecanvas] 10:00:20:00:00 <br> <br> <br> </Text>
+    </Subtitle>
+    <Subtitle SpotNumber="5" TimeIn="00:00:35:225" TimeOut="00:00:40:225" FadeUpTime="20" FadeDownTime="20">
+		<Text Direction="horizontal" HAlign="center" HPosition="0.0" VAlign="bottom" VPosition="14.0">[cinecanvas] 10:00:30:00:00 <br> <br> <br> </Text>
+    </Subtitle>
+    <Subtitle SpotNumber="6" TimeIn="00:00:45:225" TimeOut="00:00:50:225" FadeUpTime="20" FadeDownTime="20">
+		<Text Direction="horizontal" HAlign="center" HPosition="0.0" VAlign="bottom" VPosition="14.0">[cinecanvas] 10:00:40:00:00 <br> <br> <br> </Text>
+    </Subtitle>
+    <Subtitle SpotNumber="7" TimeIn="00:00:55:225" TimeOut="00:01:00:225" FadeUpTime="20" FadeDownTime="20">
+		<Text Direction="horizontal" HAlign="center" HPosition="0.0" VAlign="bottom" VPosition="14.0">[cinecanvas] 10:00:50:00:00 <br> <br> <br> </Text>
+    </Subtitle>
+    <Subtitle SpotNumber="8" TimeIn="00:01:05:225" TimeOut="00:01:10:225" FadeUpTime="20" FadeDownTime="20">
+		<Text Direction="horizontal" HAlign="center" HPosition="0.0" VAlign="bottom" VPosition="14.0">[cinecanvas] 10:01:00:00:00 <br> <br> <br> </Text>
+    </Subtitle>
+    <Subtitle SpotNumber="9" TimeIn="00:01:15:225" TimeOut="00:01:20:225" FadeUpTime="20" FadeDownTime="20">
+		<Text Direction="horizontal" HAlign="center" HPosition="0.0" VAlign="bottom" VPosition="14.0">[cinecanvas] 10:01:10:00:00 <br> <br> <br> </Text>
+    </Subtitle>
+    <Subtitle SpotNumber="10" TimeIn="00:01:25:225" TimeOut="00:01:30:225" FadeUpTime="20" FadeDownTime="20">
+		<Text Direction="horizontal" HAlign="center" HPosition="0.0" VAlign="bottom" VPosition="14.0">[cinecanvas] 10:01:20:00:00 <br> <br> <br> </Text>
+    </Subtitle>
+    <Subtitle SpotNumber="11" TimeIn="00:01:35:225" TimeOut="00:01:40:225" FadeUpTime="20" FadeDownTime="20">
+		<Text Direction="horizontal" HAlign="center" HPosition="0.0" VAlign="bottom" VPosition="14.0">[cinecanvas] 10:01:30:00:00 <br> <br> <br> </Text>
+    </Subtitle>
+    <Subtitle SpotNumber="12" TimeIn="00:01:45:225" TimeOut="00:01:50:225" FadeUpTime="20" FadeDownTime="20">
+		<Text Direction="horizontal" HAlign="center" HPosition="0.0" VAlign="bottom" VPosition="14.0">[cinecanvas] 10:01:40:00:00 <br> <br> <br> </Text>
+    </Subtitle>
+    <Subtitle SpotNumber="13" TimeIn="00:01:55:225" TimeOut="00:02:00:225" FadeUpTime="20" FadeDownTime="20">
+		<Text Direction="horizontal" HAlign="center" HPosition="0.0" VAlign="bottom" VPosition="14.0">[cinecanvas] 10:01:50:00:00 <br> <br> <br> </Text>
+    </Subtitle>
+    <Subtitle SpotNumber="14" TimeIn="00:02:05:225" TimeOut="00:02:10:225" FadeUpTime="20" FadeDownTime="20">
+		<Text Direction="horizontal" HAlign="center" HPosition="0.0" VAlign="bottom" VPosition="14.0">[cinecanvas] 10:02:00:00:00 <br> <br> <br> </Text>
+    </Subtitle>
+    <Subtitle SpotNumber="15" TimeIn="00:02:15:225" TimeOut="00:02:20:225" FadeUpTime="20" FadeDownTime="20">
+		<Text Direction="horizontal" HAlign="center" HPosition="0.0" VAlign="bottom" VPosition="14.0">[cinecanvas] 10:02:10:00:00 <br> <br> <br> </Text>
+    </Subtitle>
+    <Subtitle SpotNumber="16" TimeIn="00:02:25:225" TimeOut="00:02:30:225" FadeUpTime="20" FadeDownTime="20">
+		<Text Direction="horizontal" HAlign="center" HPosition="0.0" VAlign="bottom" VPosition="14.0">[cinecanvas] 10:02:20:00:00 <br> <br> <br> </Text>
+    </Subtitle>
+    <Subtitle SpotNumber="17" TimeIn="00:02:35:225" TimeOut="00:02:40:225" FadeUpTime="20" FadeDownTime="20">
+		<Text Direction="horizontal" HAlign="center" HPosition="0.0" VAlign="bottom" VPosition="14.0">[cinecanvas] 10:02:30:00:00 <br> <br> <br> </Text>
+    </Subtitle>
+    <Subtitle SpotNumber="18" TimeIn="00:02:45:225" TimeOut="00:02:50:225" FadeUpTime="20" FadeDownTime="20">
+		<Text Direction="horizontal" HAlign="center" HPosition="0.0" VAlign="bottom" VPosition="14.0">[cinecanvas] 10:02:40:00:00 <br> <br> <br> </Text>
+    </Subtitle>
+    <Subtitle SpotNumber="19" TimeIn="00:02:55:225" TimeOut="00:03:00:225" FadeUpTime="20" FadeDownTime="20">
+		<Text Direction="horizontal" HAlign="center" HPosition="0.0" VAlign="bottom" VPosition="14.0">[cinecanvas] 10:02:50:00:00 <br> <br> <br> </Text>
+    </Subtitle>
+    <Subtitle SpotNumber="20" TimeIn="00:03:05:225" TimeOut="00:03:10:225" FadeUpTime="20" FadeDownTime="20">
+		<Text Direction="horizontal" HAlign="center" HPosition="0.0" VAlign="bottom" VPosition="14.0">[cinecanvas] 10:03:00:00:00 <br> <br> <br> </Text>
+    </Subtitle>
+    <Subtitle SpotNumber="21" TimeIn="00:03:15:225" TimeOut="00:03:20:225" FadeUpTime="20" FadeDownTime="20">
+		<Text Direction="horizontal" HAlign="center" HPosition="0.0" VAlign="bottom" VPosition="14.0">[cinecanvas] 10:03:10:00:00 <br> <br> <br> </Text>
+    </Subtitle>
+    <Subtitle SpotNumber="22" TimeIn="00:03:25:225" TimeOut="00:03:30:225" FadeUpTime="20" FadeDownTime="20">
+		<Text Direction="horizontal" HAlign="center" HPosition="0.0" VAlign="bottom" VPosition="14.0">[cinecanvas] 10:03:20:00:00 <br> <br> <br> </Text>
+    </Subtitle>
+    <Subtitle SpotNumber="23" TimeIn="00:03:35:225" TimeOut="00:03:40:225" FadeUpTime="20" FadeDownTime="20">
+		<Text Direction="horizontal" HAlign="center" HPosition="0.0" VAlign="bottom" VPosition="14.0">[cinecanvas] 10:03:30:00:00 <br> <br> <br> </Text>
+    </Subtitle>
+    <Subtitle SpotNumber="24" TimeIn="00:03:45:225" TimeOut="00:03:50:225" FadeUpTime="20" FadeDownTime="20">
+		<Text Direction="horizontal" HAlign="center" HPosition="0.0" VAlign="bottom" VPosition="14.0">[cinecanvas] 10:03:40:00:00 <br> <br> <br> </Text>
+    </Subtitle>
+    <Subtitle SpotNumber="25" TimeIn="00:03:55:225" TimeOut="00:04:00:225" FadeUpTime="20" FadeDownTime="20">
+		<Text Direction="horizontal" HAlign="center" HPosition="0.0" VAlign="bottom" VPosition="14.0">[cinecanvas] 10:03:50:00:00 <br> <br> <br> </Text>
+    </Subtitle>
+  </Font>
+</DCSubtitle>

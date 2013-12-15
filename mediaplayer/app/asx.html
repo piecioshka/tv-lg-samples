@@ -1,0 +1,213 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>ASX Test Page</title>
+<link rel="stylesheet" href="../../css/style.css">
+<script language="javascript" src="../../js/common.js"></script>
+<script language="javascript" src="../../js/keycode.js"></script>
+<script language="javascript" src="../../js/menu.js"></script>
+<script language="javascript" src="../../js/media.js"></script>
+
+<script type="text/javascript" src="../../blackbirdjs/blackbird.js"></script>
+<link type="text/css" rel="Stylesheet" href="../../blackbirdjs/blackbird.css" />
+
+<script>
+
+	//initialize page
+	function initPage()
+	{
+		//save page as last visited page
+		setLastVisitPage();
+
+		//common initialize function
+		commonInitialize();
+		requestSourceCode();		
+		setPageID("Asx");		
+		jsLog.initLG();
+		
+		//add onclick event handler
+		addEventHandler(document.getElementById("btn_back"), "click", onClickHandler);
+		addEventHandler(document.getElementById("btn_red"), "click", onClickHandler);
+		addEventHandler(document.getElementById("btn_exit"), "click", onClickHandler);
+
+		//check if this is LG Browser
+		var userAgent = new String(navigator.userAgent);
+		
+		if (userAgent != null && userAgent.search(/LG Browser/) > -1)
+	 		isLGEBrowser = true;
+		else
+			isLGEBrowser = false;
+	
+		jsLog.lgobject('application/x-netcast-av');
+	}
+	
+	//onUserInput function should be implemented
+	function onUserInput(userInput)
+	{
+		switch(userInput)
+		{
+			case VK_BACK : window.location.replace("../menu_mediaPlayer.html"); break;
+			case VK_RED : case 82 : changeTestProgress(); break;
+		}
+	}
+
+	//set video description
+	function setVideoDescription(descriptionToSet)
+	{
+		document.getElementById("video_description").style.zIndex = "2";
+		document.getElementById("test_result").style.zIndex = "1";
+		setInnerTextById("video_description", descriptionToSet);
+	}
+
+	//change test progress
+	var testStep = 1;
+	function changeTestProgress()
+	{
+		var video = document.getElementById("video");
+		var asxPropertiesDiv = document.getElementById("asxProperties");
+		var descriptionDiv = document.getElementById("buttonDescription");
+		var redButtonDiv = document.getElementById("btn_red");
+		
+		switch(testStep)
+		{
+			case 1: 
+				if(isLGEBrowser)
+				{ 
+					var video = document.getElementById("video"); 
+					video.play(1);	
+					jsLog.lgmethod('video.play()');
+				}
+				else
+					setVideoDescription("This is not a LG Browser");
+				
+				setVideoDescription("Check whether snow boarding video is displayed."); 
+				setInnerTextById("buttonDescription", "Press RED-Key to play next video.");
+				setInnerTextById("btn_red", "PLAY NEXT");
+				break;
+				
+			case 2:
+				if(isLGEBrowser){video.next();}
+				jsLog.lgmethod('video.next()');
+				
+				setVideoDescription("Check whether NetCast advertising video is displayed.");
+				setInnerTextById("buttonDescription", "Press RED-Key to play next video.");
+				setInnerTextById("btn_red", "PLAY NEXT");
+				break;
+				
+			case 3:
+				if(isLGEBrowser){	video.next(); }
+				jsLog.lgmethod('video.next()');
+				
+				setVideoDescription("Check whether video with timer at the bottom is displayed.");
+				setInnerTextById("buttonDescription", "Press RED-Key to play previous video.");
+				setInnerTextById("btn_red", "PLAY PREVIOUS");
+				break;
+				
+			case 4:
+				if(isLGEBrowser){video.previous();}
+				jsLog.lgmethod('video.previous()');
+				
+				setVideoDescription("Check whether NetCast advertising video is displayed.");
+				setInnerTextById("buttonDescription", "No more test is left on this page.");
+				document.getElementById("btn_red").style.visibility = "hidden";
+				break;
+		} 
+		testStep++;
+	}
+	
+
+</script>
+
+</head>
+<body ondragstart='return false' onselectstart='return false' onload="javascript:initPage();">
+	<!-- title -->
+	<div class='SuiteTitle' >LG Smart TV SDK | Web Open API Tutorial</div>
+	
+	<!-- navigation -->
+	<div class='SuiteNavigation'>
+		<div style="float:left;">File : mediaplayer/app/asx.html</div>
+	</div>
+	
+	<div class='SuiteTitleLine'> </div>
+	
+	<!-- test contents -->
+	<div class='ContentArea'>
+		<div class='ApiListTitleArea'>Web Open API List</div>
+		<div class='ApiListArea'>
+			<div class='MethodTitleArea'>
+				Methods
+				<div class='MethodListArea'>
+				play(1)<br>
+				next()<br>
+				previous()
+				</div>
+			</div>
+			<div class='PropertyTitleArea'>
+				Properties
+				<div class='PropertyListArea'>
+			
+				</div>
+			</div>
+			<div class='EventTitleArea'>
+				Events
+				<div class='EventListArea'>
+			
+				</div>
+			</div>
+		</div>
+
+		<div class='ViewTitleArea'>
+			<div id='tabViewArea' class='SelectedViewArea' style='float:left;' onclick="showView();">View</div>
+			<div id='tabCodeArea' class='UnselectedViewArea' style='float:right;' onclick='showCode();'>Source</div>
+		</div>
+		
+		<div id='view'>
+			<div class='ViewArea'>
+				<object
+					id="video"
+					type="application/x-netcast-av"
+					width=300
+					height=250		
+					data="../../mediafile/asx_test.asx"
+					style="float: left"
+					autoStart=false
+					>
+				</object>	
+				
+				<!-- video description -->
+				<div id='test_result' >
+					<table width="550px" height="200px" border="0" cellpadding="0" cellspacing="0" style="position :relative; top: 10px; left:10px; font-size: 25px">
+						<tr><td>To test this application, please change 'Base Path' of an asx file which location is 'WebAPI_Tutorial/mediafile/asx_test.asx' to your path.</td></tr>
+						<tr ><td><div id="video_description" class="eachTestGuide" style="font-size: 25px"></div></td></tr>
+					</table>
+				</div>
+				
+				<br><br>
+				<div id='buttonDescription' style="font-size: 30px; text-align: center; "> Press RED-Key to play ASX.</div>
+			</div>
+		</div>
+				
+		<div style="visibility: hidden" id='codeview'>
+			<textarea class="SourceCodeArea" value=""  id='sourcecode'></textarea>
+		</div>
+		
+	</div>
+
+<!-- button and copyright -->	
+<div class='SuiteButtonArea'>
+	<!-- back key description -->
+	<div id='btn_back' class='buttonDescription '>BACK</div>
+	
+	<!-- exit key description -->	
+	<div id='btn_exit' class='buttonDescription'>EXIT</div>
+
+	<!-- red key description -->
+	<div id='btn_red' class='buttonDescription redColor'>PLAY</div>
+
+	<!-- copyright -->
+	<div class='copyright'>Copyright LG Electronics</div>
+</div>
+
+</body>
+</html>

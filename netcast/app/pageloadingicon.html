@@ -1,0 +1,186 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>App Template of API Unit Sample App</title>
+<link rel="stylesheet" href="../../css/style.css">
+<script language="javascript" src="../../js/keycode.js"></script>
+<script language="javascript" src="../../js/common.js"></script>
+<script language="javascript" src="../../js/menu.js"></script>
+
+<script type="text/javascript" src="../../blackbirdjs/blackbird.js"></script>
+<link type="text/css" rel="Stylesheet" href="../../blackbirdjs/blackbird.css" />
+
+<script>
+
+	//initialize page
+	function initPage()
+	{
+		//save page as last visited page
+		setLastVisitPage();
+		
+		//common initialize function
+		commonInitialize();
+		requestSourceCode();
+		setPageID("Page Loading Icon");		
+		jsLog.initLG();
+		
+		//add onclick event handler
+		addEventHandler(document.getElementById("btn_back"), "click", onClickHandler);
+		addEventHandler(document.getElementById("btn_red"), "click", onClickHandler);
+		addEventHandler(document.getElementById("btn_green"), "click", onClickHandler);
+		addEventHandler(document.getElementById("btn_exit"), "click", onClickHandler);
+	}
+	
+	//onUserInput function should be implemented
+	function onUserInput(userInput)
+	{
+		switch(userInput)
+		{
+			case VK_BACK : window.location.replace("../menu_netcast.html"); break;
+			case VK_RED : case 82 :processRedKey();	break;
+			case VK_GREEN : case 71 : processGreenKey(); break;
+		}
+	}
+	
+	function processRedKey()
+	{
+		if(isThisLGEBrowser())
+		{
+			window.NetCastSetPageLoadingIcon('enabled');
+			jsLog.lgmethod('window.NetCastSetPageLoadingIcon()');
+			
+			setInnerTextById("description", "Loading Icon is enabled!");
+			alert("Enable!");
+			window.location.reload();
+		}
+
+	}
+
+	function processGreenKey()
+	{
+		if(isThisLGEBrowser())
+		{
+			setCountDown();
+			window.NetCastSetPageLoadingIcon('disabled');
+			jsLog.lgmethod('window.NetCastSetPageLoadingIcon()');
+			setInnerTextById("description", "Loading Icon is disabled!");
+		}
+	}
+
+	var timer;
+	var timeCount = 5;
+	
+	//"GreenKey" click handler
+	function setCountDown()
+	{
+		timeCount = 5;
+		timer = setInterval(showLeftTime, 1000);
+		setInnerTextById("description", "Loading Icon will be off after 5 second");
+	}
+	
+	//show left time
+	function showLeftTime()
+	{
+		timeCount--;
+		if(timeCount > 0)
+			setInnerTextById("description", "This page will be reloaded after " + timeCount + " second");
+		else
+		{
+			clearInterval(timer);
+			window.location.reload();
+		}
+	}
+
+</script>
+</head>
+
+<body ondragstart='return false' onselectstart='return false' onload="javascript:initPage();">
+	
+<!-- title -->
+<div class='SuiteTitle' >LG Smart TV SDK | Web Open API Tutorial</div>
+
+<!-- navigation -->
+<div class='SuiteNavigation'>
+	<div style="float:left;">File : netcast/app/pageloadingicon.html</div>
+</div>
+
+<div class='SuiteTitleLine'> </div>
+
+<!-- test contents -->
+<div id='content_body' class='ContentArea'>
+	<div class='ApiListTitleArea'>Web Open API List</div>
+	<div class='ApiListArea'>
+		<div class='MethodTitleArea'>
+			Methods
+			<div class='MethodListArea'>
+			 window.NetCastSetPageLoadingIcon()<br>
+			</div>
+		</div>
+		<div class='PropertyTitleArea'>
+			Properties
+			<div class='PropertyListArea'>
+			
+			</div>
+		</div>
+		<div class='EventTitleArea'>
+			Events
+			<div class='EventListArea'>
+			
+			</div>
+		</div>
+	</div>
+
+	<div class='ViewTitleArea'>
+		<div id='tabViewArea' class='SelectedViewArea' style='float:left;' onclick="showView();">View</div>
+		<div id='tabCodeArea' class='UnselectedViewArea' style='float:right;' onclick='showCode();'>Source</div>
+	</div>
+
+	<div id='view'>	
+		<div class='ViewArea'>
+			<table border="0" cellpadding="0" cellspacing="0">
+				<tr height="50px">
+					<td width=500px align=left>1. Press Red-key to enable Page Loading Icon and test it.</td>
+					<td width=200px align="left"><div id="eachTestGuide"></div></td>
+					<td width=100px align="left"></td>
+				</tr>
+				<tr height="50px">
+					<td width=500px align=left>2. Press Green-key to disable Page Loading Icon and test it.</td>
+					<td width=200px align="left"><div id="eachTestGuide"></div></td>
+					<td width=100px align="left"></td>
+				</tr>
+			</table>
+			<table border="0" cellpadding="0" cellspacing="0">
+				<tr height="50px">
+					<td align=center><div id="description"></div></td>
+				</tr>
+			</table>
+		</div>
+	</div>
+	
+	<div style="visibility: hidden" id='codeview'>
+		<textarea class="SourceCodeArea" value=""  id='sourcecode'></textarea>
+	</div>	
+</div>
+
+<!-- button and copyright -->	
+<div class='SuiteButtonArea'>
+	
+	<!-- button -->	
+	<div id='btn_back' class='buttonDescription'>BACK</div>
+
+	<!-- exit button -->	
+	<div id='btn_exit' class='buttonDescription'>EXIT</div>
+
+	<!-- red key description -->
+	<div id='btn_red' class='buttonDescription redColor'>ENABLE</div>
+
+	<!-- green key description -->
+	<div id='btn_green' class='buttonDescription greenColor'>DISABLE</div>
+
+	<!-- copyright -->
+	<div class='copyright'>Copyright LG Electronics</div>
+</div>
+
+</body>
+</html>

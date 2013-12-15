@@ -1,0 +1,333 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+    
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>Advertisement API Test</title>
+<link rel="stylesheet" href="../../css/style.css">
+<script language="javascript" src="../../js/keycode.js"></script>
+<script language="javascript" src="../../js/common.js"></script>
+<script language="javascript" src="../../js/menu.js"></script>
+<script type="text/javascript" src="../../blackbirdjs/blackbird.js"></script>
+<link type="text/css" rel="Stylesheet" href="../../blackbirdjs/blackbird.css"
+/>
+<script type="text/javascript" onload='scriptLoaded=true' onerror='scriptLoaded=false'
+src="http://smartservice.lgappstv.com/library/apps/ad/lib/videoAd.js"></script>
+<script type="text/javascript">
+	var mediaURL = "http://smartservice.lgappstv.com/samples/videoAd/media/test.mp4";
+	var video = null;
+	var videoAd = null;
+	var updateInterval = 100;
+   var adPlaying = false;//a boolean variable to determine whether video being played is Ad
+   var videoPlaying = false;//a boolean variable to determine whether video is playing  
+   var adType = "";
+	//initialize page
+	function initPage() {
+		//save as last visited page
+		setLastVisitPage();
+
+		//common initialize function
+		commonInitialize();
+		requestSourceCode();
+		setPageID("VideoAd");
+		jsLog.initLG();
+
+		initVideo();
+
+		//add onclick event handler
+		addEventHandler(document.getElementById("btn_back"), "click", onClickHandler);
+		addEventHandler(document.getElementById("btn_exit"), "click", onClickHandler);
+
+		addEventHandler(document.getElementById("preVideo"), "click", handlePreroll);
+		addEventHandler(document.getElementById("preVideoPost"), "click", handlePrepostroll);
+		addEventHandler(document.getElementById("videoPost"), "click", handlePostroll);
+	}
+
+
+	function onUserInput(userInput) {
+		switch (userInput) {
+		case VK_BACK:
+			window.location.replace("../menu_advertisement.html");
+			break;
+
+		}
+	}
+
+	function initVideo() {
+		video = document.getElementById("html5_video");
+		setInterval(updatePlayProgress, updateInterval);
+	}
+
+	function handlePreroll() {
+		if (adPlaying) {
+			return;
+		}
+		adType = "preroll";
+		if (scriptLoaded && (adPlaying == false)) {
+			videoAd = new VideoAd("html5_video_div", "html5_video", prerollAdStatusListener, 'content title', 30);
+			videoAd.startPreroll();
+			jsLog.lgmethod('startPreroll');
+		} else playContent();
+	}
+
+	function prerollAdStatusListener(preEvent) {
+		jsLog.lgevent(preEvent);
+		if (preEvent == "ad_playing") {
+			document.getElementById("videoPost").className = "executeBigButtonOff";
+			document.getElementById("preVideoPost").className = "executeBigButtonOff";
+			adPlaying = true;
+		} else if (preEvent == "ad_completed") {
+			document.getElementById("videoPost").className = "executeBigButton";
+			document.getElementById("preVideoPost").className = "executeBigButton";
+			adPlaying = false;
+			videoAd.removeAd();
+			jsLog.lgmethod('removeAd');
+			playContent();
+			video.addEventListener('ended', handlePreContentEnd, false);
+		}
+	}
+	
+	function handlePreContentEnd() {
+		video.removeEventListener('ended', handlePreContentEnd, false);
+		videoPlaying = false;
+		statusIndicators.style.visibility= "hidden";
+		
+	}
+	
+	function handlePrepostroll() {
+		if (adPlaying) {
+			return;
+		}
+		adType = "prepostroll";
+		if (scriptLoaded && (adPlaying == false)) {
+			videoAd = new VideoAd("html5_video_div", "html5_video", prepostrollAdStatusListener, 'hello kitty', 20);
+			videoAd.startPreroll();
+			jsLog.lgmethod('startPreroll');
+		} else {
+			video.addEventListener('ended', handleContentEnd, false);
+			playContent();
+		}
+	}
+
+	function prepostrollAdStatusListener(preEvent) {
+		jsLog.lgevent(preEvent);
+		if (preEvent == "ad_playing") {
+			document.getElementById("preVideo").className = "executeBigButtonOff";
+			document.getElementById("videoPost").className = "executeBigButtonOff";
+			adPlaying = true;
+		} else if (preEvent == "ad_completed") {
+			document.getElementById("preVideo").className = "executeBigButton";
+			document.getElementById("videoPost").className = "executeBigButton";
+			adPlaying = false;
+			videoAd.removeAd();
+			jsLog.lgmethod('removeAd');
+			video.addEventListener('ended', handleContentEnd, false);
+			playContent();
+		}
+	}
+
+	function handleContentEnd() {
+		video.removeEventListener('ended', handleContentEnd, false);
+		if (scriptLoaded && (adPlaying == false)) {
+			videoAd = new VideoAd("html5_video_div", "html5_video", postrollAdStatusListener, 'titanic', 900);
+			videoAd.startPostroll();
+			jsLog.lgmethod('startPostroll');
+		}
+	}
+
+	function postrollAdStatusListener(postEvent) {
+		jsLog.lgevent(postEvent);
+		if(postEvent == "ad_playing"){
+			jsLog.lgmethod('postEvent ="ad_playing"');
+			if(adType=="prepostroll"){
+				document.getElementById("preVideo").className="executeBigButtonOff";
+				document.getElementById("videoPost").className="executeBigButtonOff";	
+            }
+			if(adType=="postroll"){
+				document.getElementById("preVideo").className="executeBigButtonOff";
+				document.getElementById("preVideoPost").className="executeBigButtonOff";	
+            }
+			adPlaying = true;
+		} else if (postEvent == "ad_completed") {
+			jsLog.lgmethod('postEvent ="ad_completed"');
+			if(adType=="prepostroll"){
+				document.getElementById("preVideo").className="executeBigButton";
+				document.getElementById("videoPost").className="executeBigButton";	
+            } 
+			if(adType=="postroll"){
+				document.getElementById("preVideo").className="executeBigButton";
+				document.getElementById("preVideoPost").className="executeBigButton";	
+            }
+			adPlaying = false;
+			videoAd.removeAd();
+			jsLog.lgmethod('removeAd');
+			video.src = "";
+			video.load();
+			videoPlaying=false;
+			statusIndicators.style.visibility= "hidden";
+		}
+	}
+
+	function handlePostroll() {
+		if (adPlaying) {
+			return;
+		}
+		adType = "postroll";
+		video.addEventListener('ended', handleContentEnd, false);
+		playContent();
+	}
+
+	function playContent() {
+		video.src = mediaURL;
+		video.load();
+		video.play();
+		videoPlaying=true;
+	}
+
+	function handleResume() {
+		video.play();
+		videoPlaying=true;
+	}
+
+	function handlePause() {
+		video.pause();
+		videoPlaying=false;
+		if (adPlaying) {
+			videoAd.pause();
+			jsLog.lgmethod('pause');
+		}
+
+	}
+
+	function handleStop() {
+		video.pause();
+		videoPlaying=false;
+		video.src = "";
+		video.load();
+		statusIndicators.style.visibility= "hidden";
+	}
+
+	function handleSeek(secFromNow) {
+		if (video.currentTime + secFromNow < video.duration) {
+			video.currentTime += secFromNow;
+		} else video.currentTime = video.duration;
+
+	}
+
+	function handleChangeSpeed(rateIncBy) {
+		video.playbackRate += rateIncBy;
+	}
+
+	function updatePlayProgress() {
+		if(adPlaying||videoPlaying){
+			statusIndicators.style.visibility= "visible";
+		var playspeedText = "Play Speed: " + video.playbackRate.toFixed(1);
+		var ProgressText = "Progress: " + video.currentTime.toFixed(2) + " / " + video.duration.toFixed(2);
+		setInnerTextById("playspeed", playspeedText);
+		setInnerTextById("currentTime", ProgressText);
+		}else statusIndicators.style.visibility= "hidden";
+	}
+</script>
+</head>
+
+<body ondragstart='return false' onselectstart='return false' onload="javascript:initPage();">
+	<!-- title -->
+	<div class='SuiteTitle'>LG Smart TV SDK | Web Open API Tutorial</div>
+	<!-- navigation -->
+	<div class='SuiteNavigation'>
+		<div style="float:left;">File : advertisement/app/videoAd.html</div>
+	</div>
+	<div class='SuiteTitleLine'></div>
+	<!-- test contents -->
+	<div id='content_body' class='ContentArea'>
+		<div class='ApiListTitleArea'>Web Open API List</div>
+		<div class='ApiListArea'>
+			<div class='MethodTitleArea'>Methods
+				<div class='MethodListArea'>startPreroll()
+					<br>startPostroll()
+					<br>pause()
+					<br>removeAd()
+				</div>
+			</div>
+			<div class='PropertyTitleArea'>Properties
+				<div class='PropertyListArea'></div>
+			</div>
+			<div class='EventTitleArea'>Events
+				<div class='EventListArea'>ad_present (event)
+					<br>ad_absent (event)
+					<br>ad_playing (event)
+					<br>ad_completed (event)
+				</div>
+			</div>
+		</div>
+		<div class='ViewTitleArea'>
+			<div id='tabViewArea' class='SelectedViewArea' style='float:left;' onclick="showView();">View</div>
+			<div id='tabCodeArea' class='UnselectedViewArea' style='float:right;'onclick='showCode();'>Source</div>
+		</div>
+		<div id='view' class='ViewArea'>
+			<table border="0">
+				<tr>
+					<td rowspan="4" width="520" height="300">
+						<div id="html5_video_div" style="top: 5px; left: 5px; width: 520px; height: 300px; float: left; position: absolute; background-color:black;">
+							<video id="html5_video" poster="" width=520 height=300>	<i> Browser doesn't support video tag</i> </video>
+						</div>
+					</td>
+					<td>
+						<div id="preVideo" class="executeBigButton">1. Preroll + Video Content</div>
+					</td>
+				</tr>
+				<tr>
+					<td>
+						<div id="preVideoPost" class="executeBigButton">2. Preroll + Video Content + Postroll</div>
+					</td>
+				</tr>
+				<tr>
+					<td>
+						<div id="videoPost" class="executeBigButton">3. Video Content + Postroll</div>
+					</td>
+				</tr>
+				<tr>
+					<td height="60px">
+						<div id="statusIndicators" style="visibility:hidden">
+							<div id="playspeed"></div>
+							<div id="currentTime"></div>
+						</div>
+						<div>
+							<br>
+							<br>When Video Ad is playing, Buttons will be disabled to prevent user from	skipping/seeking Video Ad.
+						</div>
+					</td>
+				</tr>
+				<tr>
+					<td width="520" height="50">
+						<div id="controlButtonArea">
+							<button id="pause" onclick="handlePause()">pause</button>
+							<button id="stop" onclick="handleStop()">stop</button>
+							<button id="resume" onclick="handleResume()">resume</button>
+							<button id="seekPlus5" onclick="handleSeek(10)">seek(+10sec)</button>
+							<button id="seekMinus5" onclick="handleSeek(-10)">seek(-10sec)</button>
+							<button id="incPlaySpeed" onclick="handleChangeSpeed(0.5)">Faster</button>
+							<button id="decPlaySpeed" onclick="handleChangeSpeed(-0.5)">Slower</button>
+						</div>
+					</td>
+				</tr>
+			</table>
+		</div>
+		<div style="visibility: hidden" id='codeview'>
+			<textarea class="SourceCodeArea" value="" id='sourcecode'></textarea>
+		</div>
+	</div>
+	<!-- description -->
+	<div class='SuiteDescription' id='back_exit_test_description'></div>
+	<!-- button and copyright -->
+	<div class='SuiteButtonArea'>
+		<!-- back key description -->
+		<div id='btn_back' class='buttonDescription'>BACK</div>
+		<!-- exit button -->
+		<div id='btn_exit' class='buttonDescription'>EXIT</div>
+		<!-- copyright -->
+		<div class='copyright'>Copyright LG Electronics</div>
+	</div>
+</body>
+
+</html>

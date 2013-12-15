@@ -1,0 +1,293 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+    
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>App Template of API Unit Sample App</title>
+<link rel="stylesheet" href="../../css/style.css">
+<script language="javascript" src="../../js/keycode.js"></script>
+<script language="javascript" src="../../js/common.js"></script>
+<script language="javascript" src="../../js/menu.js"></script>
+<script type="text/javascript" src="../../blackbirdjs/blackbird.js"></script>
+<link type="text/css" rel="Stylesheet" href="../../blackbirdjs/blackbird.css"
+/>
+<script type="text/javascript" onload='scriptLoaded=true' onerror='scriptLoaded=false'
+src="http://smartservice.lgappstv.com/library/apps/ad/lib/bannerAd.js"></script>
+<script type="text/javascript">
+	var bannerAd = null;
+	var bFocus = true;
+	//initialize page
+	function initPage() {
+		//save as last visited page
+		setLastVisitPage();
+
+		//common initialize function
+		commonInitialize();
+		requestSourceCode();
+		setPageID("BannerAd");
+		jsLog.initLG();
+
+		//add onclick event handler
+		addEventHandler(document.getElementById("btn_back"), "click", onClickHandler);
+		addEventHandler(document.getElementById("btn_exit"), "click", onClickHandler);
+
+		addEventHandler(document.getElementById("btn_close"), "click", closeFullScreen);
+		addEventHandler(document.getElementById("btn_refresh"), "click", refresh);
+
+		addEventHandler(document.getElementById("style1"), "click", display_custom_leaderboard_x50_y100);
+		addEventHandler(document.getElementById("style2"), "click", display_custom_leaderboard_x200_y500);
+		addEventHandler(document.getElementById("style3"), "click", display_custom_medrect_x50_y100);
+		addEventHandler(document.getElementById("style4"), "click", display_custom_medrect_x200_y300);
+		addEventHandler(document.getElementById("style5"), "click", display_custom_rect_x50_y100);
+		addEventHandler(document.getElementById("style6"), "click", display_custom_rect_x200_y500);
+
+	}
+
+
+	function onUserInput(userInput) {
+		switch (userInput) {
+		case VK_BACK:
+			window.location.replace("../menu_advertisement.html");
+			break;
+		case VK_UP:
+			showFocused();
+			break;
+		}
+	}
+
+	function showFocused() {
+		if (bFocus) {
+			if (bannerAd.isExist) {
+				bannerAd.setFocus(); // the banner gets focused
+				jsLog.lgmethod('setFocus');
+			}
+			bFocus = false;
+		} else {
+			if (bannerAd.isExist) {
+				bannerAd.removeFocus(); // the banner gets focused
+				jsLog.lgmethod('removeFocus');
+			}
+			bFocus = true;
+		}
+	}
+
+	function display_custom_leaderboard_x50_y100() {
+		showFullScreenWithButtonArea();
+		bannerAd = new BannerAd(null, 'fullScreenContent', 'custom_leaderboard_x50_y100', adStatusCBfunc);
+		jsLog.lgmethod('BannerAd');
+		bannerAd.displayBanner();
+		jsLog.lgmethod('displayBanner');
+	}
+
+	function display_custom_leaderboard_x200_y500() {
+		showFullScreenWithButtonArea();
+		bannerAd = new BannerAd(null, 'fullScreenContent', 'custom_leaderboard_x200_y500', adStatusCBfunc);
+		jsLog.lgmethod('BannerAd');
+		bannerAd.displayBanner();
+		jsLog.lgmethod('displayBanner');
+	}
+
+	function display_custom_medrect_x50_y100() {
+		showFullScreenWithButtonArea();
+		bannerAd = new BannerAd(null, 'fullScreenContent', 'custom_medrect_x50_y100', adStatusCBfunc);
+		jsLog.lgmethod('on BannerAd()');
+		bannerAd.displayBanner();
+		jsLog.lgmethod('displayBanner');
+	}
+
+	function display_custom_medrect_x200_y300() {
+		showFullScreenWithButtonArea();
+		bannerAd = new BannerAd(null, 'fullScreenContent', 'custom_medrect_x200_y300', adStatusCBfunc);
+		bannerAd.displayBanner();
+		jsLog.lgmethod('displayBanner');
+	}
+
+	function display_custom_rect_x50_y100() {
+		showFullScreenWithButtonArea();
+		bannerAd = new BannerAd(null, 'fullScreenContent', 'custom_rect_x50_y100', adStatusCBfunc);
+		jsLog.lgmethod('BannerAd');
+		bannerAd.displayBanner();
+		jsLog.lgmethod('displayBanner');
+	}
+
+	function display_custom_rect_x200_y500() {
+		showFullScreenWithButtonArea();
+		bannerAd = new BannerAd(null, 'fullScreenContent', 'custom_rect_x200_y500', adStatusCBfunc);
+		jsLog.lgmethod('on BannerAd()');
+		bannerAd.displayBanner();
+		jsLog.lgmethod('on displayBanner');
+	}
+
+
+	function adStatusCBfunc(adStatus) {
+		if (adStatus == "ad_present") jsLog.lgevent('ad_present');
+
+		else if (adStatus == "ad_absent") jsLog.lgevent('ad_absent');
+
+		else if (adStatus == "ad_completed") jsLog.lgevent('ad_completed');
+
+		else if (adStatus == "ad_focused") jsLog.lgevent('ad_focused');
+
+		else if (adStatus == "ad_clicked") jsLog.lgevent('ad_clicked');
+	}
+
+
+	function showFullScreenWithButtonArea() {
+		showFullScreenOnly(true);
+	}
+
+	function closeFullScreen() {
+		if (bannerAd.isExist) {
+			jsLog.lgproperty('isExist : ' + bannerAd.isExist);
+			bannerAd.removeAd();
+			jsLog.lgmethod('removeAd');
+		}
+		hideFullScreen();
+
+	}
+
+	function refresh() {
+		bannerAd.refreshAd();
+		jsLog.lgmethod('refreshAd');
+	}
+
+
+	function showFullScreenOnly(bShowButtonArea) {
+		var mainBody = document.getElementById("mainBody");
+		var fullScreenContent = document.getElementById("fullScreenContent");
+
+		mainBody.style.visibility = "hidden";
+		fullScreenContent.style.visibility = "visible";
+
+		if (bShowButtonArea === true) {
+			var bottomArea = document.getElementById("SuiteButtonArea");
+
+			bottomArea.style.visibility = "hidden";
+		}
+
+	}
+
+	function hideFullScreen() {
+		var mainBody = document.getElementById("mainBody");
+		var fullScreenContent = document.getElementById("fullScreenContent");
+
+		mainBody.style.opacity = 1;
+		mainBody.style.visibility = "visible";
+		fullScreenContent.style.visibility = "hidden";
+
+		var bottomArea = document.getElementById("SuiteButtonArea");
+		bottomArea.style.visibility = "visible";
+	}
+</script>
+</head>
+
+<body ondragstart='return false' onselectstart='return false' onload="javascript:initPage();">
+	<div id='mainBody' class='mainBody'>
+		<!-- title -->
+		<div class='SuiteTitle'>LG Smart TV SDK | Web Open API Tutorial</div>
+		<!-- navigation -->
+		<div class='SuiteNavigation'>
+			<div style="float:left;">File : advertisement/app/bannerAd.html</div>
+		</div>
+		<div class='SuiteTitleLine'></div>
+		<!-- test contents -->
+		<div id='content_body' class='ContentArea'>
+			<div class='ApiListTitleArea'>Web Open API List</div>
+			<div class='ApiListArea'>
+				<div class='MethodTitleArea'>Methods
+					<div class='MethodListArea'>displayBanner()
+						<br>setFocus()
+						<br>removeFocus()
+						<br>removeAd()
+						<br>refreshAd()
+					</div>
+				</div>
+				<div class='PropertyTitleArea'>Properties
+					<div class='PropertyListArea'>isExist</div>
+				</div>
+				<div class='EventTitleArea'>Events
+					<div class='EventListArea'>ad_present (event)
+						<br>ad_absent (event)
+						<br>ad_completed (event)
+						<br>ad_focused (event)
+						<br>ad_clicked (event)
+					</div>
+				</div>
+			</div>
+			<div class='ViewTitleArea'>
+				<div id='tabViewArea' class='SelectedViewArea' style='float:left;' onclick="showView();">View</div>
+				<div id='tabCodeArea' class='UnselectedViewArea' style='float:right;'onclick='showCode();'>Source</div>
+			</div>
+			<div id='view' class='ViewArea'>
+				<table border="0">
+					<tr>
+						<td width="325">
+							<div id="style1" class="executeBigButton">728x90 at (50,100)</div>
+						</td>
+						<td rowspan="6" width="260">
+							<div id="diplayArea" class="diplayAreaStyle">Press Up key to set and remove focus on Banner Ad in full screen</div>
+						</td>
+					</tr>
+					<tr>
+						<td>
+							<div id="style2" class="executeBigButton">728x90 at (200,500)</div>
+						</td>
+					</tr>
+					<tr>
+						<td>
+							<div id="style3" class="executeBigButton">300x250 at (50,100)</div>
+						</td>
+					</tr>
+					<tr>
+						<td>
+							<div id="style4" class="executeBigButton">300x250 at (200,300)</div>
+						</td>
+					</tr>
+					<tr>
+						<td>
+							<div id="style5" class="executeBigButton">180x150 at (50,100)</div>
+						</td>
+					</tr>
+					<tr>
+						<td>
+							<div id="style6" class="executeBigButton">180x150 at (200,500)</div>
+						</td>
+					</tr>
+					<tr height="50px">
+						<td colspan="2" align=left>
+							<div id="APIdescription"></div>
+						</td>
+					</tr>
+				</table>
+			</div>
+			<div style="visibility: hidden" id='codeview'>
+				<textarea class="SourceCodeArea" value="" id='sourcecode'></textarea>
+			</div>
+		</div>
+		<!-- description -->
+		<div class='SuiteDescription' id='back_exit_test_description'></div>
+		<!-- button and copyright -->
+		<div id='SuiteButtonArea' class='SuiteButtonArea'>
+			<!-- back key description -->
+			<div id='btn_back' class='buttonDescription'>BACK</div>
+			<!-- exit button -->
+			<div id='btn_exit' class='buttonDescription'>EXIT</div>
+			<!-- copyright -->
+			<div class='copyright'>Copyright LG Electronics</div>
+		</div>
+	</div>
+	<!-- end of mainBody DIV -->
+	<div id='fullScreenContent' class='fullScreenContent'>
+		<object id="service" type="application/x-netcast-service" width=0 height=0></object>
+		<div id='fullScreenButtonArea' class='SuiteButtonArea'>
+			<!-- back key description -->
+			<div id='btn_close' class='buttonDescription'>Close FullScreen</div>
+			<!-- exit button -->
+			<div id='btn_refresh' class='buttonDescription'>Refresh Ad</div>
+			<!-- copyright -->
+			<div class='copyright'>Copyright LG Electronics</div>
+		</div>
+	</div>
+</body>
+
+</html>

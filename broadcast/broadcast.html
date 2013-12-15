@@ -1,0 +1,476 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+
+<head>
+<meta http-equiv="Content-Type" content="text/html;  charset=UTF-8">
+<title>Broadcast Api Test</title>
+<link rel="stylesheet" href="../css/style.css">
+<script language="javascript" src="../js/common.js"></script>
+<script language="javascript" src="../js/keycode.js"></script>
+<script language="javascript" src="../js/menu.js"></script>
+<script type="text/javascript" src="../blackbirdjs/blackbird.js"></script>
+<link type="text/css" rel="Stylesheet" href="../blackbirdjs/blackbird.css"
+/>
+<script>
+	addEventHandler(window, "load", initPage);
+	var htmlStr1 = "";
+	var broadcast;
+	var msgArea;
+	//initialize page
+	function initPage() {
+
+		//save page as last visited page
+		setLastVisitPage();
+
+		//common initialize function
+		commonInitialize();
+		requestSourceCode();
+		jsLog.initLG();
+
+		broadcast = document.getElementById('broadcast');
+		msgArea = document.getElementById('displayArea');
+
+		checkNetCastVersion();
+
+		//add onclick event handler
+		addEventHandler(document.getElementById("btn_back"), "click", onClickHandler);
+		addEventHandler(document.getElementById("btn_exit"), "click", onClickHandler);
+		addEventHandler(document.getElementById("channel_up"), "click", channelUpHandler);
+		addEventHandler(document.getElementById("channel_down"), "click", channelDownHandler);
+
+		jsLog.lgobject('application/x-netcast-broadcast');
+
+		loadContent();
+		showPropResult()
+	}
+
+	function processChannelChangeFunction(e) {
+		if (e) {
+			jsLog.lgevent('onchannelchange');
+			loadContent();
+			showPropResult();
+		}
+	}
+
+	function processChStateChangeFunction(e) {
+		if (e) {
+			jsLog.lgevent('onchannelstatechange');
+			loadContent();
+			showPropResult();
+		}
+	}
+
+	function loadContent() {
+
+		htmlStr1 = (broadcast.getCurrentChannelName() != undefined) ? "<font style='color:#000000; font-weight:bold'>Current Channel Name:</font> " + broadcast.getCurrentChannelName() : "";
+		jsLog.lgmethod('getCurrentChannelName()');
+		htmlStr1 += (broadcast.getChannelState() != undefined) ? "<br><font style='color:#000000; font-weight:bold'>Channel State:</font> " + broadcast.getChannelState() : "";
+		jsLog.lgmethod('getChannelState()');
+		htmlStr1 += (broadcast.getCurrentChannelName() != undefined) ? "<br><font style='color:#000000; font-weight:bold'>Is ChannelMap Empty:</font> " + broadcast.isChannelMapEmpty() : "";
+		jsLog.lgmethod('isChannelMapEmpty()');
+		htmlStr1 += (broadcast.getCurrentChannelName() != undefined) ? "<br><font style='color:#000000; font-weight:bold'>Is Tuner Input:</font> " + broadcast.isTunerInput() : "";
+		jsLog.lgmethod('isTunerInput()');
+
+		var currentChannel = broadcast.getCurrentChannelNumber();
+		var signalType = currentChannel.signalType;
+		var physicalNum = currentChannel.physicalNum;
+		var logicalNum = currentChannel.logicalNum;
+		var minorNum = currentChannel.minorNum;
+		var majorNum = currentChannel.majorNum;
+		var programNum = currentChannel.programNum;
+		var sourceId = currentChannel.sourceId;
+		var serviceType = currentChannel.serviceType;
+		var tsId = currentChannel.tsId;
+		var nwId = currentChannel.originalNetworkId;
+		htmlStr1 += (currentChannel != undefined) ? "<br><font style='color:#000000; font-weight:bold'>Current Channel Info:</font><br>1. Signal Type: " + signalType + "<br>2. Physical Number: " + physicalNum + "<br>3. Logical Number: " + logicalNum + "<br>4. Major Number: " + majorNum + "<br>5. Minor Number: " + minorNum + "<br>6. Program Number: " + programNum + "<br>7. Souce ID: " + sourceId + "<br>8. Service Type: " + serviceType + "<br>9. TS ID: " + tsId + "<br>10. Original Network ID: " + nwId : "";
+
+	}
+
+	function showPropResult() {
+		msgArea.innerHTML = htmlStr1;
+		msgArea.style.overflow = "auto";
+		htmlStr1 = "";
+	}
+
+	function processNoSignalFunction(e) {
+		var htmlStr = "";
+		if (e) {
+			htmlStr += "No Signal";
+			jsLog.lgevent('onnosignal');
+		}
+		msgArea.innerHTML = htmlStr;
+	}
+	//onUserInput function should be implemented
+	function onUserInput(userInput) {
+
+
+		switch (userInput) {
+		case VK_BACK:
+			window.location.replace("../main_menu.html");
+			break;
+		case VK_YELLOW:
+			//document.getElementById('btn_yellow');
+			break;
+		case VK_PAGE_UP:
+			broadcast.channelUp();
+			jsLog.lgproperty('channelUp()');
+			break;
+		case VK_PAGE_DOWN:
+			broadcast.channelDown();
+			jsLog.lgproperty('channelDown()');
+			break;
+		}
+	}
+
+	function channelUpHandler() {
+
+		broadcast.channelUp();
+		jsLog.lgmethod('channelUp()');
+	}
+
+	function channelDownHandler() {
+
+		broadcast.channelDown();
+		jsLog.lgmethod('channelDown()');
+	}
+
+	function allChannelListHandler() {
+		var channelList;
+		var channelCount;
+		var channelName = new Array();
+		var signalType = new Array();
+		var physicalNum = new Array();
+		var majorNum = new Array();
+		var minorNum = new Array();
+		var logicalNum = new Array();
+		var channelCount = broadcast.getChannelCount("tv", "all");
+		var digitalChCount = broadcast.getChannelCount("tv", "DIGITAL");
+		var analogChCount = broadcast.getChannelCount("tv", "ANALOG");
+		htmlStr1 += "<font style='color:#000000; font-weight:bold'>All Channel Count:</font> " + channelCount + " [Digital: " + digitalChCount + ", Analog: " + analogChCount + "]";
+		jsLog.lgmethod('getChannelCount()');
+		channelList = broadcast.getAllChannelList("tv", "DIGITAL");
+		jsLog.lgmethod("getAllChannelList()")
+
+		if (channelList == undefined) {
+			htmlStr1 += "<br>No Digital Channel<br>";
+
+		} else {
+			htmlStr1 += "<br> List of Digital Channel :";
+			for (i = 0; i < channelList.length; i++) {
+				channelName[i] = channelList[i].channelName;
+				signalType[i] = channelList[i].signalType;
+				physicalNum[i] = channelList[i].physicalNum;
+				if (broadcast.isDvb()) {
+					jsLog.lgmethod('isDvb()');
+					logicalNum[i] = channelList[i].logicalNum; // For DVB
+					htmlStr1 += "<br> [" + (i + 1) + "] Channel Name: " + channelName[i] + "<br>Signal Type: " + signalType[i] + "<br>Physical Number: " + physicalNum[i] + "<br> Logical Number: " + logicalNum[i] + " ";
+				} else {
+					majorNum[i] = channelList[i].majorNum; // For ATSC
+					minorNum[i] = channelList[i].minorNum;
+					htmlStr1 += "<br> [" + (i + 1) + "] Channel Name: " + channelName[i] + "<br> Signal Type: " + signalType[i] + "<br> Physical Number: " + physicalNum[i] + "<br>Major Number: " + majorNum[i] + "<br> Minor Number: " + minorNum[i] + " ";
+				}
+				msgArea.innerHTML = htmlStr1 + "\n";
+			}
+		}
+		showPropResult();
+	}
+
+	function channelListHandler() {
+
+		var channelList;
+		var channelCount;
+		var channelName = new Array();
+		var signalType = new Array();
+		var physicalNum = new Array();
+		var majorNum = new Array();
+		var minorNum = new Array();
+		var logicalNum = new Array();
+		var channelCount = broadcast.getChannelCount("tv", "all");
+		var digitalChCount = broadcast.getChannelCount("tv", "DIGITAL");
+		var analogChCount = broadcast.getChannelCount("tv", "ANALOG");
+		htmlStr1 += "<font style='color:#000000; font-weight:bold'>All Channel Count:</font> " + channelCount + " [Digital: " + digitalChCount + ", Analog: " + analogChCount + "]";
+		jsLog.lgmethod('getChannelCount()');
+		channelList = broadcast.getChannelList("tv", "DIGITAL", 1);
+		jsLog.lgmethod("getChannelList()")
+
+		if (channelList == undefined) {
+			htmlStr1 += "<br>No Digital Channel<br>";
+
+		} else {
+			htmlStr1 += "<br> List of Digital Channel :";
+			for (i = 0; i < channelList.length; i++) {
+				channelName[i] = channelList[i].channelName;
+				signalType[i] = channelList[i].signalType;
+				physicalNum[i] = channelList[i].physicalNum;
+				if (broadcast.isDvb()) {
+					jsLog.lgmethod('isDvb()');
+					logicalNum[i] = channelList[i].logicalNum; // For DVB
+					htmlStr1 += "<br> [" + (i + 1) + "] Channel Name: " + channelName[i] + "<br>Signal Type: " + signalType[i] + "<br>Physical Number: " + physicalNum[i] + "<br> Logical Number: " + logicalNum[i] + " ";
+				} else {
+					majorNum[i] = channelList[i].majorNum; // For ATSC
+					minorNum[i] = channelList[i].minorNum;
+					htmlStr1 += "<br> [" + (i + 1) + "] Channel Name: " + channelName[i] + "<br> Signal Type: " + signalType[i] + "<br> Physical Number: " + physicalNum[i] + "<br>Major Number: " + majorNum[i] + "<br> Minor Number: " + minorNum[i] + " ";
+				}
+				msgArea.innerHTML = htmlStr1 + "\n";
+			}
+		}
+		showPropResult();
+
+	}
+
+	function setChannelHandler() {
+		var channelList;
+		var channelCount;
+		var channelName;
+		var signalType;
+		var physicalNum;
+		var majorNum;
+		var minorNum;
+		var logicalNum;
+		var channelToSet = 2;
+
+		channelList = broadcast.getAllChannelList("tv", "DIGITAL");
+		jsLog.lgmethod("getAllChannelList()")
+		if (channelList == undefined) {
+			channelList = broadcast.getAllChannelList("tv", "ANALOG");
+			jsLog.lgmethod("getAllChannelList()")
+		}
+
+		channelName = channelList[channelToSet].channelName;
+		signalType = channelList[channelToSet].signalType;
+		physicalNum = channelList[channelToSet].physicalNum;
+		if (broadcast.isDvb()) {
+			logicalNum = channelList[channelToSet].logicalNum; // For DVB,
+			broadcast.setChannel(signalType, physicalNum, logicalNum);
+			jsLog.lgmethod("setChannel()")
+		} else {
+			majorNum = channelList[channelToSet].majorNum; // For ATSC,
+			minorNum = channelList[channelToSet].minorNum;
+			broadcast.setChannel(signalType, physicalNum, majorNum, minorNum);
+			jsLog.lgmethod("setChannel()")
+		}
+		// loadContent();
+		//showPropResult();
+	}
+
+	function programListHandler() {
+
+		var today = new Date();
+		var tYear = today.getYear() + 1900;
+		var tMonth = modNumberToText(today.getMonth() + 1);
+		var tDate = modNumberToText(today.getDate());
+		var tHour = modNumberToText(today.getHours());
+		var tMin = modNumberToText(today.getMinutes());
+		var tSec = modNumberToText(today.getSeconds());
+		var start_date = tYear + tMonth + tDate + tHour + tMin + tSec; //YYYYMMDDHHmmss
+		var end_date = tYear + tMonth + tDate + "235959"; //YYYYMMDDHHmmss
+
+		var programCount = broadcast.getProgramCount(start_date, end_date);
+		jsLog.lgmethod('getProgramCount()');
+		htmlStr1 += "<font style='color:#000000; font-weight:bold'>All Program Count: </font>" + programCount + "<br>";
+		var programList = broadcast.getProgramList(start_date, end_date);
+		jsLog.lgmethod('getProgramList()');
+		var title = new Array();
+		var startTime = new Array();
+		var endTime = new Array();
+		var description = new Array();
+
+		if (programCount != 0) {
+			htmlStr1 += "Program List: <br>";
+
+			for (i = 0; i < programList.length; i++) {
+				title[i] = programList[i].title;
+				startTime[i] = programList[i].startTime;
+				endTime[i] = programList[i].endTime;
+				description[i] = programList[i].description;
+				htmlStr1 += "[" + i + "] Title: " + title[i] + "<br>Start Time: " + startTime[i] + "<br>End Time: " + endTime[i] + "<br>Description: " + description[i] + " <br>";
+				msgArea.innerHTML = htmlStr1 + "\n";
+			}
+			showPropResult();
+		}
+
+	}
+
+	function currentProgramInfoHandler() {
+		var currentProgram = broadcast.getCurrentProgram();
+		jsLog.lgmethod('getCurrentProgram()');
+		htmlStr1 += "Title: " + currentProgram.title + "<br>Start Time: " + currentProgram.startTime + "<br>End Time: " + currentProgram.endTime + "<br> Description: " + currentProgram.description + "<br> Event Id: " + currentProgram.eventId + " ";
+		showPropResult();
+	}
+
+	function nextProgramInfoHandler() {
+		var nextProgram = broadcast.getNextProgram();
+		jsLog.lgmethod('getNextProgram()');
+		htmlStr1 += "Title: " + nextProgram.title + "<br>Start Time: " + nextProgram.startTime + "<br>End Time: " + nextProgram.endTime + "<br> description: " + nextProgram.description + "<br> Event Id: " + nextProgram.eventId + " ";
+		showPropResult();
+
+	}
+
+	function setSizeHandler() {
+		if ((broadcast.width == 240) && (broadcast.height == 180)) {
+			broadcast.width = 320;
+			broadcast.height = 240;
+		} else {
+			broadcast.width = 240;
+			broadcast.height = 180;
+		}
+		jsLog.lgproperty('width:' + broadcast.width);
+		jsLog.lgproperty('height:' + broadcast.height);
+	}
+
+	function checkNetCastVersion() {
+
+		var nBrowserVersion = getBrowserVersion();
+		if (nBrowserVersion == 4) // NetCast 2.0
+		{
+			document.getElementById('enable_numberkey').style.visibility = "hidden";
+			document.getElementById('disable_numberkey').style.visibility = "hidden";
+			document.getElementById('enable_channelKey').style.visibility = "hidden";
+			document.getElementById('disableChannelKey').style.visibility = "hidden";
+		} else if (nBrowserVersion >= 5) // NetCast 3.0
+		{
+			addEventHandler(document.getElementById("set_channel"), "click", setChannelHandler);
+			addEventHandler(document.getElementById("program_list"), "click", programListHandler);
+			addEventHandler(document.getElementById("current_programInfo"), "click", currentProgramInfoHandler);
+			addEventHandler(document.getElementById('next_programInfo'), "click", nextProgramInfoHandler);
+			addEventHandler(document.getElementById("all_channelList"), "click", allChannelListHandler);
+			addEventHandler(document.getElementById("channelList"), "click", channelListHandler);
+			addEventHandler(document.getElementById("set_size"), "click", setSizeHandler);
+
+			broadcast.onchannelchange = processChannelChangeFunction;
+			broadcast.onnosignal = processNoSignalFunction;
+			broadcast.onchannelstatechange = processChStateChangeFunction;
+			//broadcast.onepgupdate=processEpgupdate;
+
+			setInnerTextById("method", "setChannel(),getChannelState()<br>getCurrentChannelName(),getCurrentChannelNumber()<br>getAllChannelList(),getChannelList()<br>getChannelCount(),getCurrentProgram()<br>getNextProgram(),getProgramList()<br>getProgramCount(),isChannelMapEmpty()<br>isTunerInput(),isDvb()");
+			setInnerTextById("property", "width<br>height");
+			setInnerTextById("events", "onchannelchange<br>onnosignal<br>onchannelstatechange");
+		}
+	}
+
+	function modNumberToText(num) {
+
+		if (num < 10) num = "0" + num;
+
+		return num;
+	}
+</script>
+    </head>
+    
+    <body ondragstart='return false' onselectstart='return false'>
+        <!-- title -->
+        <div class='SuiteTitle'>LG Smart TV SDK | Web Open API Tutorial</div>
+        <!-- navigation -->
+        <div class='SuiteNavigation'>
+            <div style="float:left;">File : broadcast/broadcast.html</div>
+        </div>
+        <div class='SuiteTitleLine'></div>
+        <!-- test contents -->
+        <div id='content_body' class='ContentArea'>
+            <div class='ApiListTitleArea'>API List</div>
+            <div class='ApiListArea'>
+                <div class='MethodTitleArea'>Methods
+                    <div class='MethodListArea' id="method">channelUp(), channelDown()
+                        <br>
+                    </div>
+                </div>
+                <div class='PropertyTitleArea'>Properties
+                    <div class='PropertyListArea' id="property"></div>
+                </div>
+                <div class='EventTitleArea'>Events
+                    <div class='EventListArea' id="events"></div>
+                </div>
+            </div>
+            <div class='ViewTitleArea'>
+                <div id='tabViewArea' class='SelectedViewArea' style='float:left;' onclick="showView();">View</div>
+                <div id='tabCodeArea' class='UnselectedViewArea' style='float:right;'
+                onclick="showCode();">Source</div>
+            </div>
+            <div id='view'>
+                <div class='ViewArea'>
+                    <table>
+                        <tr>
+                            <td style="width:350px; vertical-align:top">
+                                <object id="broadcast" type="application/x-netcast-broadcast" width=240
+                                height=180></object>
+                            </td>
+                            <td>
+                                <table width="543" border="0">
+                                    <tr>
+                                        <td width="163">
+                                            <div id="channel_up" class="executeMiddleButton">Channel Up</div>
+                                        </td>
+                                        <td rowspan="11" width="380" style="vertical-align:top;">
+                                            <div id="displayArea" class="displayAreaStyle" style="overflow:auto;height:320px;"></div>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <div id="channel_down" class="executeMiddleButton">Channel Down</div>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <div id="set_channel" class="executeMiddleButton">Set Channel</div>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <div id="program_list" class="executeMiddleButton">Program List</div>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <div id="current_programInfo" class="executeMiddleButton">Current Program</div>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <div id="next_programInfo" class="executeMiddleButton">Next Program</div>
+                                        </td>
+                                    </tr>
+                                    <td>
+                                        <div id="all_channelList" class="executeMiddleButton">All Channel List</div>
+                                    </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <div id="channelList" class="executeMiddleButton">Channel List</div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <div id="set_size" class="executeMiddleButton">Set Size</div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td></td>
+                        </tr>
+                        <tr height="50px">
+                            <td colspan="2" align=left>
+                                <div id="APIdescription"></div>
+                            </td>
+                        </tr>
+                        </table>
+                        </td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+            <div style="visibility: hidden" id='codeview'>
+                <textarea class="SourceCodeArea" value="" id='sourcecode'></textarea>
+            </div>
+        </div>
+        <!-- button and copyright -->
+        <div class='SuiteButtonArea'>
+            <!-- button -->
+            <div id='btn_back' class='buttonDescription'>BACK</div>
+            <!-- exit key description -->
+            <div id='btn_exit' class='buttonDescription'>EXIT</div>
+            <!--<div id='btn_yellow' class='buttonDescription yellowColor'>NEXT PAGE</div>-->
+            <!-- copyright -->
+            <div class='copyright'>Copyright LG Electronics</div>
+        </div>
+    </body>
+
+</html>
